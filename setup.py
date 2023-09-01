@@ -30,7 +30,6 @@ setup(
     'Programming Language :: Python :: 3',
     'Operating System :: OS Independent',
   ],
-  package_data={'periodic_table_cli': ['README.md', 'LISENCE']},
   include_package_data=True,
   python_requires='>=3.0',
 )

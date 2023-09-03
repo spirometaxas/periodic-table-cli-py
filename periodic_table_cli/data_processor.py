@@ -200,7 +200,7 @@ class DataProcessor:
     def _format_specific_element(element, data):
         response = '\n'
         for item in DataProcessor.COLUMN_CONFIG:
-            response += f' { item["title"] }: { DataProcessor._get_list_display_values(item["key"], element, data["families"], data["shells"]) }\n'
+            response += ' ' + item['title'] + ': ' + DataProcessor._get_list_display_values(item['key'], element, data['families'], data['shells']) + '\n'
         response += '\n'
         return response
 

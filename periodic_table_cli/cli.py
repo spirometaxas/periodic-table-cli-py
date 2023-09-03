@@ -1,6 +1,8 @@
 import sys
+import os
 import json
 from data_processor import DataProcessor
+from chart_processor import ChartProcessor
 
 MODES = {
     'APP':   'APP',
@@ -116,6 +118,8 @@ def load_data():
         sys.exit()
 
 def main():
+    os.system('')  # Enable ANSI escape sequences on Windows
+
     mode = MODES['APP']
     atomicNumber = None
     name = None

@@ -1,0 +1,228 @@
+import os
+import sys
+from utils import Utils
+
+class DataProcessor:
+
+    BOX_CHARACTERS = {
+        'VERTICAL':   '│',
+        'HORIZONTAL': '─',
+        'CROSS':      '┼',
+    }
+
+    COLUMN_CONFIG = [
+        { 'key': 'atomicNumber',          'title': 'Atomic Number',          'titleParts': [ '', 'Atomic', 'Number' ]           },
+        { 'key': 'symbol',                'title': 'Symbol',                 'titleParts': [ '', '', 'Symbol' ]                 },
+        { 'key': 'name',                  'title': 'Name',                   'titleParts': [ '', '', 'Name' ]                   },
+        { 'key': 'family',                'title': 'Family',                 'titleParts': [ '', '', 'Family' ]                 },
+        { 'key': 'standardState',         'title': 'State',                  'titleParts': [ '', '', 'State' ]                  },
+        { 'key': 'atomicMass',            'title': 'Atomic Mass',            'titleParts': [ '', 'Atomic Mass', '(u)' ]         },
+        { 'key': 'numberofProtons',       'title': 'Protons',                'titleParts': [ '', 'Pro-', 'tons' ]               },
+        { 'key': 'numberOfNeutrons',      'title': 'Neutrons',               'titleParts': [ '', 'Neut-', 'rons' ]              },
+        { 'key': 'numberofElectrons',     'title': 'Electrons',              'titleParts': [ '', 'Elect-', 'rons' ]             },
+        { 'key': 'numberofValence',       'title': 'Valence Electrons',      'titleParts': [ 'Valence', 'Elect-', 'rons' ]      },
+        { 'key': 'valency',               'title': 'Valency',                'titleParts': [ '', '', 'Valency' ]                },
+        { 'key': 'atomicRadius',          'title': 'Atomic Radius',          'titleParts': [ 'Atomic', 'Radius', '(pm)' ]       },
+        { 'key': 'density',               'title': 'Density',                'titleParts': [ '', 'Density', '(g/cm^3)' ]        },
+        { 'key': 'electronegativity',     'title': 'Electronegativity',      'titleParts': [ '', 'Electro-', 'negativity' ]     },
+        { 'key': 'ionizationEnergy',      'title': 'Ioization Energy',       'titleParts': [ 'Ionization', 'Energy', '(eV)' ]   },
+        { 'key': 'electronAffinity',      'title': 'Electron Affinity',      'titleParts': [ 'Electron', 'Affinity', '(eV)' ]   },
+        { 'key': 'meltingPoint',          'title': 'Melting Point',          'titleParts': [ 'Melting', 'Point', '(K)' ]        },
+        { 'key': 'boilingPoint',          'title': 'Boiling Point',          'titleParts': [ 'Boiling', 'Point', '(K)' ]        },
+        { 'key': 'specificHeat',          'title': 'Specific Heat',          'titleParts': [ 'Specific', 'Heat', '(J/g K)' ]    },
+        { 'key': 'radioactive',           'title': 'Radioactive',            'titleParts': [ '', 'Radio-', 'active' ]           },
+        { 'key': 'occurrence',            'title': 'Occurrence',             'titleParts': [ '', '', 'Occurrence' ]             },
+        { 'key': 'yearDiscovered',        'title': 'Year',                   'titleParts': [ '', '', 'Year' ]                   },
+        { 'key': 'period',                'title': 'Period',                 'titleParts': [ '', '', 'Period' ]                 },
+        { 'key': 'group',                 'title': 'Group',                  'titleParts': [ '', '', 'Group' ]                  },
+        { 'key': 'shell',                 'title': 'Shell',                  'titleParts': [ '', '', 'Shell' ]                  },
+        { 'key': 'electronConfiguration', 'title': 'Electron Configuration', 'titleParts': [ '', '', 'Electron Configuration' ] },
+        { 'key': 'oxidationStates',       'title': 'Oxidation States',       'titleParts': [ '', '', 'Oxidation States' ]       },
+    ]
+
+    def _create_grid(x, y):
+        grid = []
+        for i in range(y):
+            row = []
+            for j in range(x):
+                row.append(' ')
+            grid.append(row)
+        return grid
+
+    def _get_title_length(title):
+        size = 0
+        for t in title:
+            if size < len(t):
+                size = len(t)
+        return size
+
+    def _get_column_data_length(grid, c):
+        size = 0
+        for i in range(len(grid)):
+            if size < len(grid[i][c]):
+                size = len(grid[i][c])
+        return size
+
+    def _get_string_with_padding(text, length, alignment='left'):
+        if alignment == 'left':
+            if len(text) < length:
+                padding_length = length - len(text)
+                return text + ' ' * padding_length
+            else:
+                return text
+        elif alignment == 'center':
+            if len(text) < length:
+                padding_length = length - len(text)
+                buffer = padding_length // 2
+                return ' ' * buffer + text + ' ' * (padding_length - buffer)
+            else:
+                return text
+        elif alignment == 'right':
+            if len(text) < length:
+                padding_length = length - len(text)
+                return ' ' * padding_length + text
+            else:
+                return text
+
+    def _render_grid(grid, full_column_config, verbose, width=None):
+        sizes = []
+        for i in range(len(full_column_config)):
+            title_length = DataProcessor._get_title_length(full_column_config[i]['titleParts'])
+            data_length = DataProcessor._get_column_data_length(grid, i)
+            sizes.append(max(title_length, data_length))
+
+        # Omit columns that do not fit on the screen
+        column_config = full_column_config
+        if width is not None and width > 0:
+            current_column = 0
+            current_width = 1 + sizes[0]
+            while current_column + 1 < len(sizes) and current_width < width:
+                if current_width + 3 < width:
+                    current_width += 3
+                else:
+                    break
+                if current_width + sizes[current_column + 1] < width:
+                    current_width += sizes[current_column + 1]
+                    current_column += 1
+                else:
+                    break
+
+            column_config = full_column_config[:current_column + 1]
+
+        response = '\n'
+
+        # Titles
+        for j in range(len(column_config[0]['titleParts'])):
+            response += ' '  # Left buffer
+            for i in range(len(column_config)):
+                entry = DataProcessor._get_string_with_padding(column_config[i]['titleParts'][j], sizes[i], 'center')
+                response += entry
+                if i < len(column_config) - 1:
+                    response += ' ' + DataProcessor.BOX_CHARACTERS['VERTICAL'] + ' '  # Column buffer
+            response += '\n'
+
+        # Border
+        for i in range(len(column_config)):
+            response += DataProcessor.BOX_CHARACTERS['HORIZONTAL'] * (sizes[i] + 2)
+            if i < len(column_config) - 1:
+                response += DataProcessor.BOX_CHARACTERS['CROSS']
+        response += '\n'
+
+        # Data
+        for i in range(len(grid)):
+            response += ' '
+            for j in range(len(column_config)):
+                response += DataProcessor._get_string_with_padding(grid[i][j], sizes[j])
+                if j < len(column_config) - 1:
+                    response += ' ' + DataProcessor.BOX_CHARACTERS['VERTICAL'] + ' '  # Column buffer
+            response += '\n'
+
+        if verbose:
+            response += '\n ** Expected'
+        else:
+            response += '\n Run with --verbose (-v) for more data.'
+
+        if len(column_config) < len(full_column_config):
+            response += '\n\n ' + str(len(full_column_config) - len(column_config)) + ' columns omitted due to screen size constraints. Specify an element to see the full data.'
+
+        response += '\n'
+
+        return response
+
+    def _get_column_display_values(key, element, families, shells):
+        if key == 'family':
+            return families.get(element.get(key)).get('name')
+        elif key == 'shell':
+            return shells.get(element.get(key)).get('name')
+        else:
+            value = element.get(key)
+            if value is None:
+                return '-'
+            elif key == 'atomicMass':
+                return value.replace(' u', '')
+            elif key == 'atomicRadius':
+                return value.replace(' pm', '')
+            elif key == 'density':
+                return value.replace(' g/cm^3', '')
+            elif key in ('ionizationEnergy', 'electronAffinity'):
+                return value.replace(' eV', '')
+            elif key in ('meltingPoint', 'boilingPoint'):
+                return value.replace(' K', '')
+            elif key == 'radioactive':
+                return 'Yes' if value else 'No'
+            return str(value)
+
+    def _get_list_display_values(key, element, families, shells):
+        if key == 'family':
+            return families.get(element.get(key)).get('name')
+        elif key == 'shell':
+            return shells.get(element.get(key)).get('name')
+        else:
+            value = element.get(key)
+            if value is None:
+                return '-'
+            elif key == 'radioactive':
+                return 'Yes' if value else 'No'
+            return str(value)
+
+    def _format_all_elements(data, verbose, width):
+        elements = sorted(data.get('elements'), key=lambda x: x.get('atomicNumber'))
+
+        column_config = DataProcessor.COLUMN_CONFIG if verbose else DataProcessor.COLUMN_CONFIG[:3]
+        grid = DataProcessor._create_grid(len(column_config), len(elements))
+
+        for i, element in enumerate(elements):
+            for j, config in enumerate(column_config):
+                grid[i][j] = DataProcessor._get_column_display_values(config.get('key'), element, data.get('families'), data.get('shells'))
+
+        return DataProcessor._render_grid(grid, column_config, verbose, width)
+
+    def _format_specific_element(element, data):
+        response = '\n'
+        for item in DataProcessor.COLUMN_CONFIG:
+            response += f' { item["title"] }: { DataProcessor._get_list_display_values(item["key"], element, data["families"], data["shells"]) }\n'
+        response += '\n'
+        return response
+
+    def format_data(config, data):
+        element = None
+        if config.get('atomicNumber') is not None or config.get('symbol') is not None or config.get('name') is not None:
+            if config and Utils.is_valid_atomic_number(config.get('atomicNumber')):
+                element = Utils.get_element_by_atomic_number(config.get('atomicNumber'), data.get('elements'))
+            elif config and Utils.is_valid_element_symbol(config.get('symbol'), data.get('elements')):
+                element = Utils.get_element_by_symbol(config.get('symbol'), data.get('elements'))
+            elif config and Utils.is_valid_element_name(config.get('name'), data.get('elements')):
+                element = Utils.get_element_by_name(config.get('name'), data.get('elements'))
+
+            if element is not None:
+                return DataProcessor._format_specific_element(element, data)
+            else:
+                return '\n Specified element not found.\n'
+
+        # Element was not specified, so display the full chart
+        width = None
+        if sys.stdout.isatty():
+            width = os.get_terminal_size().columns
+
+        verbose = config.get('verbose', False)
+        return DataProcessor._format_all_elements(data, verbose, width)

@@ -1,40 +1,155 @@
 import sys
+import json
+from data_processor import DataProcessor
 
-PERIODIC_TABLE = '\n'\
-    '      1                                                                                                    18    \n'\
-    '   ╔═════╗                    THE PERIODIC TABLE OF ELEMENTS                                             ╔═════╗ \n'\
-    ' 1 ║  1  ║                                                                                               ║  2  ║ \n'\
-    '   ║  H  ║  2                                                                13    14    15    16    17  ║  He ║ \n'\
-    '   ╠═════╬═════╗                                                           ╔═════╦═════╦═════╦═════╦═════╬═════╣ \n'\
-    ' 2 ║  3  ║  4  ║                                                           ║  5  ║  6  ║  7  ║  8  ║  9  ║ 10  ║ \n'\
-    '   ║  Li ║  Be ║                                                           ║  B  ║  C  ║  N  ║  O  ║  F  ║  Ne ║ \n'\
-    '   ╠═════╬═════╣                                                           ╠═════╬═════╬═════╬═════╬═════╬═════╣ \n'\
-    ' 3 ║ 11  ║ 12  ║                                                           ║ 13  ║ 14  ║ 15  ║ 16  ║ 17  ║ 18  ║ \n'\
-    '   ║  Na ║  Mg ║  3     4     5     6     7     8     9    10    11    12  ║  Al ║  Si ║  P  ║  S  ║  Cl ║  Ar ║ \n'\
-    '   ╠═════╬═════╬═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╬═════╬═════╬═════╬═════╬═════╬═════╣ \n'\
-    ' 4 ║ 19  ║ 20  ║ 21  ║ 22  ║ 23  ║ 24  ║ 25  ║ 26  ║ 27  ║ 28  ║ 29  ║ 30  ║ 31  ║ 32  ║ 33  ║ 34  ║ 35  ║ 36  ║ \n'\
-    '   ║  K  ║  Ca ║  Sc ║  Ti ║  V  ║  Cr ║  Mn ║  Fe ║  Co ║  Ni ║  Cu ║  Zn ║  Ga ║  Ge ║  As ║  Se ║  Br ║  Kr ║ \n'\
-    '   ╠═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣ \n'\
-    ' 5 ║ 37  ║ 38  ║ 39  ║ 40  ║ 41  ║ 42  ║ 43  ║ 44  ║ 45  ║ 46  ║ 47  ║ 48  ║ 49  ║ 50  ║ 51  ║ 52  ║ 53  ║ 54  ║ \n'\
-    '   ║  Rb ║  Sr ║  Y  ║  Zr ║  Nb ║  Mo ║  Tc ║  Ru ║  Rh ║  Pd ║  Ag ║  Cd ║  In ║  Sn ║  Sb ║  Te ║  I  ║  Xe ║ \n'\
-    '   ╠═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣ \n'\
-    ' 6 ║ 55  ║ 56  ╟──┬──╢ 72  ║ 73  ║ 74  ║ 75  ║ 76  ║ 77  ║ 78  ║ 79  ║ 80  ║ 81  ║ 82  ║ 83  ║ 84  ║ 85  ║ 86  ║ \n'\
-    '   ║  Cs ║  Ba ║  │  ║  Hf ║  Ta ║  W  ║  Re ║  Os ║  Ir ║  Pt ║  Au ║  Hg ║  Tl ║  Pb ║  Bi ║  Po ║  At ║  Rn ║ \n'\
-    '   ╠═════╬═════╣  │  ╠═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣ \n'\
-    ' 7 ║ 87  ║ 88  ╠══╪══╣ 104 ║ 105 ║ 106 ║ 107 ║ 108 ║ 109 ║ 110 ║ 111 ║ 112 ║ 113 ║ 114 ║ 115 ║ 116 ║ 117 ║ 118 ║ \n'\
-    '   ║  Fr ║  Ra ║  │  ║  Rf ║  Db ║  Sg ║  Bh ║  Hs ║  Mt ║  Ds ║  Rg ║  Cn ║  Nh ║  Fl ║  Mc ║  Lv ║  Ts ║  Og ║ \n'\
-    '   ╚═════╩═════╝  │  ╚═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝ \n'\
-    '             ┌────┘                                                                                              \n'\
-    '             │ ╔═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╦═════╗       \n'\
-    '             ├─╢ 57  ║ 58  ║ 59  ║ 60  ║ 61  ║ 62  ║ 63  ║ 64  ║ 65  ║ 66  ║ 67  ║ 68  ║ 69  ║ 70  ║ 71  ║       \n'\
-    '             │ ║  La ║  Ce ║  Pr ║  Nd ║  Pm ║  Sm ║  Eu ║  Gd ║  Tb ║  Dy ║  Ho ║  Er ║  Tm ║  Yb ║  Lu ║       \n'\
-    '             │ ╠═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╬═════╣       \n'\
-    '             ╘═╣ 89  ║ 90  ║ 91  ║ 92  ║ 93  ║ 94  ║ 95  ║ 96  ║ 97  ║ 98  ║ 99  ║ 100 ║ 101 ║ 102 ║ 103 ║       \n'\
-    '               ║  Ac ║  Th ║  Pa ║  U  ║  Np ║  Pu ║  Am ║  Cm ║  Bk ║  Cf ║  Es ║  Fm ║  Md ║  No ║  Lr ║       \n'\
-    '               ╚═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝       \n'
+MODES = {
+    'APP':   'APP',
+    'DATA':  'DATA',
+    'CHART': 'CHART'
+}
+
+DATA_FILE = 'data.json'
+
+def print_usage():
+    print('\n'\
+        '           ╔═╗                               ╔═╗ \n'\
+        '           ╠═╬═╗                   ╔═╦═╦═╦═╦═╬═╣ \n'\
+        '           ╠═╬═╣                   ╠═╬═╬═╬═╬═╬═╣ \n'\
+        '           ╠═╬═╬═╦═╦═╦═╦═╦═╦═╦═╦═╦═╬═╬═╬═╬═╬═╬═╣ \n'\
+        '           ╠═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╣ \n'\
+        '           ╠═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╣ \n'\
+        '           ╠═╬═╣:╠═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╣ \n'\
+        '           ╚═╩═╝ ╚═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╝ \n'\
+        '               ╔═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╦═╗   \n'\
+        '              :╠═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╬═╣   \n'\
+        '               ╚═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╩═╝   \n'\
+        '\n'\
+        ' An interactive Periodic Table of Elements app for the console!\n'\
+        '\n'\
+        ' Interactive Controls:\n'\
+        '   - Navigation: Use <UP>|<DOWN>|<LEFT>|<RIGHT> arrows\n'\
+        '\n'\
+        '   - Display Mode: Use SLASH </> to toggle the display mode forwards\n'\
+        '                   Use BACKSLASH <\\> to toggle the display mode in reverse\n'\
+        '\n'\
+        '   - Search: Query with letters or numbers\n'\
+        '             Use <UP>|<DOWN> arrows to navigate results\n'\
+        '             Press <ENTER> to select\n'\
+        '             Press <LEFT> to exit search\n'\
+        '\n'\
+        '   - Quit: Press <ESC> or <CTRL+C>\n'\
+        '\n'\
+        ' Usage:\n'\
+        '   $ periodic-table-cli\n'\
+        '   $ periodic-table-cli [options]\n'\
+        '\n'\
+        ' Options:\n'\
+        '   --mode=<mode>          Set the mode for the application.  Supports three values:\n'\
+        '                            - app:    Run in interactive mode (default)\n'\
+        '                            - data:   Display data for a specified element\n'\
+        '                            - chart:  Prints a non-interactive table only\n'\
+        '   --atomic-number=<int>  Initialize the Periodic Table at the specified atomic number (1-118)\n'\
+        '   --symbol=<symbol>      Initialize the Periodic Table at the specified element symbol\n'\
+        '   --name=<name>          Initialize the Periodic Table at the specified element name\n'\
+        '   --small, -s            Print a smaller Periodic Table of Elements (include --mode=chart)\n'\
+        '   --verbose, -v          Print a complete data chart with all elements (include --mode=data)\n'\
+        '\n'\
+        ' Full Docs: https://spirometaxas.com/projects/periodic-table-cli\n\n'\
+        ' Last updated September 2023\n');
+
+def get_flags(params):
+    return [param for param in params if param.startswith('-')]
+
+def is_small(flags):
+    return any(flag.lower() in ('-s', '--small') for flag in flags)
+
+def is_help(flags):
+    return any(flag.lower() in ('--help', '-h') for flag in flags)
+
+def is_verbose(flags):
+    return any(flag.lower() in ('--verbose', '-v') for flag in flags)
+
+def get_mode(flags):
+    prefix = '--mode='
+    for flag in flags:
+        if flag and flag.lower().startswith(prefix):
+            mode_string = flag[len(prefix):]
+            if mode_string and mode_string.upper() in MODES:
+                return MODES[mode_string.upper()]
+    return MODES['APP']  # Default to APP
+
+def get_atomic_number(flags):
+    prefix = '--atomic-number='
+    for flag in flags:
+        if flag and flag.lower().startswith(prefix):
+            atomic_number_string = flag[len(prefix):]
+            if atomic_number_string is not None and atomic_number_string.isdigit():
+                return int(atomic_number_string)
+    return None
+
+def get_name(flags):
+    prefix = '--name='
+    for flag in flags:
+        if flag and flag.lower().startswith(prefix):
+            name_string = flag[len(prefix):]
+            if name_string is not None:
+                return name_string
+    return None
+
+def get_symbol(flags):
+    prefix = '--symbol='
+    for flag in flags:
+        if flag and flag.lower().startswith(prefix):
+            symbol_string = flag[len(prefix):]
+            if symbol_string is not None:
+                return symbol_string
+    return None
+
+def load_data():
+    try:
+        f = open(DATA_FILE)
+        data = json.load(f)
+        f.close()
+        return data
+    except:
+        print('\n Error loading data file.\n')
+        sys.exit()
 
 def main():
-    sys.stdout.write(PERIODIC_TABLE)
+    mode = MODES['APP']
+    atomicNumber = None
+    name = None
+    symbol = None
+    small = False
+    verbose = False
+
+    if len(sys.argv) > 1:
+        params = sys.argv[1:]
+        mode = get_mode(params)
+        atomic_number = get_atomic_number(params)
+        name = get_name(params)
+        symbol = get_symbol(params)
+        small = is_small(params)
+        verbose = is_verbose(params)
+
+        if is_help(params):
+            print_usage()
+            sys.exit()
+        elif mode == MODES['DATA']:
+            data = load_data()
+            print(DataProcessor.format_data({ 'atomicNumber': atomic_number, 'symbol': symbol, 'name': name, 'verbose': verbose }, data))
+            sys.exit()
+        elif mode == MODES['CHART']:
+            data = load_data()
+            print(ChartProcessor.format_chart({ 'atomicNumber': atomic_number, 'symbol': symbol, 'name': name, 'small': small }, data))
+            sys.exit()
+
+    if not sys.stdout.isatty():
+        print('\n Error: Interactive mode is only supported within a terminal screen.\n')
+        sys.exit()
+
+    # TODO: Launch App Mode
+    print('APP MODE')
 
 if __name__ == "__main__":
     main()

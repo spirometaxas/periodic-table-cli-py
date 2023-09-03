@@ -16,10 +16,14 @@ setup(
   author_email = 'spirometaxas@outlook.com',
   url = 'https://spirometaxas.com/projects/periodic-table-cli/',
   download_url = 'https://github.com/spirometaxas/periodic-table-cli-py/archive/refs/tags/v0.0.2.tar.gz',
+  project_urls={
+    'Source Code': 'https://github.com/spirometaxas/periodic-table-cli-py',
+  },
   keywords = [ 'Periodic Table', 'Periodic Table of Elements', 'periodic', 'periodic-table-cli', 'Chemistry', 'elements', 'atoms', 'atomic', 'cli', 'console', 'terminal', 'shell', 'unicode' ],
   entry_points={'console_scripts': ['periodic-table-cli=periodic_table_cli.cli:main']},
   classifiers=[
     'Development Status :: 4 - Beta',
+    'Environment :: Console',
 
     'Intended Audience :: Education',
     'Intended Audience :: Science/Research',

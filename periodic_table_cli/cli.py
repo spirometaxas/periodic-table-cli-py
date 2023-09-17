@@ -1,14 +1,34 @@
 import sys
 import os
 import json
+import curses
 from data_processor import DataProcessor
 from chart_processor import ChartProcessor
+from app import App
 
-MODES = {
-    'APP':   'APP',
-    'DATA':  'DATA',
-    'CHART': 'CHART'
-}
+class AppConfig:
+
+    def __init__(self, atomic_number, symbol, name):
+        self.atomic_number = atomic_number
+        self.symbol = symbol
+        self.name = name
+
+class DataConfig(AppConfig):
+
+    def __init__(self, atomic_number, symbol, name, verbose):
+        super().__init__(atomic_number, symbol, name)
+        self.verbose = verbose
+
+class ChartConfig(AppConfig):
+
+    def __init__(self, atomic_number, symbol, name, small):
+        super().__init__(atomic_number, symbol, name)
+        self.small = small
+
+class MODES:
+    APP   = 'APP'
+    DATA  = 'DATA'
+    CHART = 'CHART'
 
 DATA_FILE = 'data.json'
 
@@ -76,9 +96,14 @@ def get_mode(flags):
     for flag in flags:
         if flag and flag.lower().startswith(prefix):
             mode_string = flag[len(prefix):]
-            if mode_string and mode_string.upper() in MODES:
-                return MODES[mode_string.upper()]
-    return MODES['APP']  # Default to APP
+            if mode_string is not None:
+                if mode_string.upper() == MODES.DATA:
+                    return MODES.DATA
+                elif mode_string.upper() == MODES.CHART:
+                    return MODES.CHART
+                elif mode_string.upper() == MODES.APP:
+                    return MODES.APP
+    return MODES.APP  # Default to APP
 
 def get_atomic_number(flags):
     prefix = '--atomic-number='
@@ -120,8 +145,8 @@ def load_data():
 def main():
     os.system('')  # Enable ANSI escape sequences on Windows
 
-    mode = MODES['APP']
-    atomicNumber = None
+    mode = MODES.APP
+    atomic_number = None
     name = None
     symbol = None
     small = False
@@ -139,21 +164,22 @@ def main():
         if is_help(params):
             print_usage()
             sys.exit()
-        elif mode == MODES['DATA']:
+        elif mode == MODES.DATA:
             data = load_data()
-            print(DataProcessor.format_data({ 'atomicNumber': atomic_number, 'symbol': symbol, 'name': name, 'verbose': verbose }, data))
+            print(DataProcessor.format_data(DataConfig(atomic_number, symbol, name, verbose), data))
             sys.exit()
-        elif mode == MODES['CHART']:
+        elif mode == MODES.CHART:
             data = load_data()
-            print(ChartProcessor.format_chart({ 'atomicNumber': atomic_number, 'symbol': symbol, 'name': name, 'small': small }, data))
+            print(ChartProcessor.format_chart(ChartConfig(atomic_number, symbol, name, small), data))
             sys.exit()
 
     if not sys.stdout.isatty():
         print('\n Error: Interactive mode is only supported within a terminal screen.\n')
         sys.exit()
 
-    # TODO: Launch App Mode
-    print('APP MODE')
+    data = load_data()
+    app = App(AppConfig(atomic_number, symbol, name), data)
+    curses.wrapper(app.start)
 
 if __name__ == "__main__":
     main()

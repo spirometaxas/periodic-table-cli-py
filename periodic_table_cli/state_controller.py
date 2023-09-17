@@ -80,3 +80,38 @@ class Layout:
         'MAX_SEARCH_LENGTH':  36,
         'MAX_SEARCH_RESULTS': 23,
     }
+
+class StateController:
+
+    def __init__(self, data, config):
+        self.data = data
+
+    def process_left(self):
+        return True
+
+    def process_right(self):
+        return True
+
+    def process_up(self):
+        return True
+
+    def process_down(self):
+        return True
+
+    def process_slash(self):
+        return True
+
+    def process_backslash(self):
+        return True
+
+    def process_backspace(self):
+        return True
+
+    def process_enter(self):
+        return True
+
+    def process_search_input(self, key):
+        return True
+
+    def get_render_config(self):
+        return None

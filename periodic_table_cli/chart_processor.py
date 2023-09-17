@@ -6,8 +6,8 @@ from tables import PERIODIC_TABLE_SMALL, PERIODIC_TABLE
 
 class ChartProcessor:
 
-    HIGHLIGHT = '\u001b[7m';
-    OFF = '\u001b[0m';
+    HIGHLIGHT = '\u001b[7m'
+    OFF = '\u001b[0m'
 
     DIMENSIONS = {
         'SMALL': {
@@ -49,20 +49,20 @@ class ChartProcessor:
         for row, row_data in enumerate(Layout.PeriodicTable):
             for column, element_number in enumerate(row_data):
                 if element_number == atomic_number:
-                    return {'row': row, 'column': column}
+                    return { 'row': row, 'column': column }
         return None
 
     def format_chart(config, data):
-        small = config.get('small', False)
+        small = config.small or False
         element = None
 
-        if config.get('atomicNumber') is not None or config.get('symbol') is not None or config.get('name') is not None:
-            if config.get('atomicNumber') is not None and Utils.is_valid_atomic_number(config['atomicNumber']):
-                element = Utils.get_element_by_atomic_number(config['atomicNumber'], data['elements'])
-            elif config.get('symbol') is not None and Utils.is_valid_element_symbol(config['symbol'], data['elements']):
-                element = Utils.get_element_by_symbol(config['symbol'], data['elements'])
-            elif config.get('name') is not None and Utils.is_valid_element_name(config['name'], data['elements']):
-                element = Utils.get_element_by_name(config['name'], data['elements'])
+        if config.atomic_number is not None or config.symbol is not None or config.name is not None:
+            if config.atomic_number is not None and Utils.is_valid_atomic_number(config.atomic_number):
+                element = Utils.get_element_by_atomic_number(config.atomic_number, data['elements'])
+            elif config.symbol is not None and Utils.is_valid_element_symbol(config.symbol, data['elements']):
+                element = Utils.get_element_by_symbol(config.symbol, data['elements'])
+            elif config.name is not None and Utils.is_valid_element_name(config.name, data['elements']):
+                element = Utils.get_element_by_name(config.name, data['elements'])
 
             if element is not None:
                 return ChartProcessor._format_specific_element(element, small)

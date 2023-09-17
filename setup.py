@@ -1,8 +1,14 @@
 from setuptools import setup
+import os
 
 def get_readme():
     with open('README.md', encoding='utf8') as f:
         return f.read()
+
+def get_install_requirements():
+  if os.name == 'nt':
+    return [ 'windows-curses' ]  # Only install for Windows
+  return []
 
 setup(
   name = 'periodic-table-cli',
@@ -21,6 +27,7 @@ setup(
   },
   keywords = [ 'Periodic Table', 'Periodic Table of Elements', 'periodic', 'periodic-table-cli', 'Chemistry', 'elements', 'atoms', 'atomic', 'cli', 'console', 'terminal', 'shell', 'unicode' ],
   entry_points={'console_scripts': ['periodic-table-cli=periodic_table_cli.cli:main']},
+  install_requires=get_install_requirements(),
   classifiers=[
     'Development Status :: 4 - Beta',
     'Environment :: Console',

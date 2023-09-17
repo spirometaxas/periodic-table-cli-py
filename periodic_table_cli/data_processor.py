@@ -2,42 +2,48 @@ import os
 import sys
 from utils import Utils
 
+class BoxCharacters:
+    VERTICAL   = '│'
+    HORIZONTAL = '─'
+    CROSS      = '┼'
+
+class ColumnItem:
+
+    def __init__(self, key, title, title_parts):
+        self.key = key
+        self.title = title
+        self.title_parts = title_parts
+
 class DataProcessor:
 
-    BOX_CHARACTERS = {
-        'VERTICAL':   '│',
-        'HORIZONTAL': '─',
-        'CROSS':      '┼',
-    }
-
     COLUMN_CONFIG = [
-        { 'key': 'atomicNumber',          'title': 'Atomic Number',          'titleParts': [ '', 'Atomic', 'Number' ]           },
-        { 'key': 'symbol',                'title': 'Symbol',                 'titleParts': [ '', '', 'Symbol' ]                 },
-        { 'key': 'name',                  'title': 'Name',                   'titleParts': [ '', '', 'Name' ]                   },
-        { 'key': 'family',                'title': 'Family',                 'titleParts': [ '', '', 'Family' ]                 },
-        { 'key': 'standardState',         'title': 'State',                  'titleParts': [ '', '', 'State' ]                  },
-        { 'key': 'atomicMass',            'title': 'Atomic Mass',            'titleParts': [ '', 'Atomic Mass', '(u)' ]         },
-        { 'key': 'numberofProtons',       'title': 'Protons',                'titleParts': [ '', 'Pro-', 'tons' ]               },
-        { 'key': 'numberOfNeutrons',      'title': 'Neutrons',               'titleParts': [ '', 'Neut-', 'rons' ]              },
-        { 'key': 'numberofElectrons',     'title': 'Electrons',              'titleParts': [ '', 'Elect-', 'rons' ]             },
-        { 'key': 'numberofValence',       'title': 'Valence Electrons',      'titleParts': [ 'Valence', 'Elect-', 'rons' ]      },
-        { 'key': 'valency',               'title': 'Valency',                'titleParts': [ '', '', 'Valency' ]                },
-        { 'key': 'atomicRadius',          'title': 'Atomic Radius',          'titleParts': [ 'Atomic', 'Radius', '(pm)' ]       },
-        { 'key': 'density',               'title': 'Density',                'titleParts': [ '', 'Density', '(g/cm^3)' ]        },
-        { 'key': 'electronegativity',     'title': 'Electronegativity',      'titleParts': [ '', 'Electro-', 'negativity' ]     },
-        { 'key': 'ionizationEnergy',      'title': 'Ioization Energy',       'titleParts': [ 'Ionization', 'Energy', '(eV)' ]   },
-        { 'key': 'electronAffinity',      'title': 'Electron Affinity',      'titleParts': [ 'Electron', 'Affinity', '(eV)' ]   },
-        { 'key': 'meltingPoint',          'title': 'Melting Point',          'titleParts': [ 'Melting', 'Point', '(K)' ]        },
-        { 'key': 'boilingPoint',          'title': 'Boiling Point',          'titleParts': [ 'Boiling', 'Point', '(K)' ]        },
-        { 'key': 'specificHeat',          'title': 'Specific Heat',          'titleParts': [ 'Specific', 'Heat', '(J/g K)' ]    },
-        { 'key': 'radioactive',           'title': 'Radioactive',            'titleParts': [ '', 'Radio-', 'active' ]           },
-        { 'key': 'occurrence',            'title': 'Occurrence',             'titleParts': [ '', '', 'Occurrence' ]             },
-        { 'key': 'yearDiscovered',        'title': 'Year',                   'titleParts': [ '', '', 'Year' ]                   },
-        { 'key': 'period',                'title': 'Period',                 'titleParts': [ '', '', 'Period' ]                 },
-        { 'key': 'group',                 'title': 'Group',                  'titleParts': [ '', '', 'Group' ]                  },
-        { 'key': 'shell',                 'title': 'Shell',                  'titleParts': [ '', '', 'Shell' ]                  },
-        { 'key': 'electronConfiguration', 'title': 'Electron Configuration', 'titleParts': [ '', '', 'Electron Configuration' ] },
-        { 'key': 'oxidationStates',       'title': 'Oxidation States',       'titleParts': [ '', '', 'Oxidation States' ]       },
+        ColumnItem('atomicNumber',          'Atomic Number',          [ '', 'Atomic', 'Number' ]           ),
+        ColumnItem('symbol',                'Symbol',                 [ '', '', 'Symbol' ]                 ),
+        ColumnItem('name',                  'Name',                   [ '', '', 'Name' ]                   ),
+        ColumnItem('family',                'Family',                 [ '', '', 'Family' ]                 ),
+        ColumnItem('standardState',         'State',                  [ '', '', 'State' ]                  ),
+        ColumnItem('atomicMass',            'Atomic Mass',            [ '', 'Atomic Mass', '(u)' ]         ),
+        ColumnItem('numberofProtons',       'Protons',                [ '', 'Pro-', 'tons' ]               ),
+        ColumnItem('numberOfNeutrons',      'Neutrons',               [ '', 'Neut-', 'rons' ]              ),
+        ColumnItem('numberofElectrons',     'Electrons',              [ '', 'Elect-', 'rons' ]             ),
+        ColumnItem('numberofValence',       'Valence Electrons',      [ 'Valence', 'Elect-', 'rons' ]      ),
+        ColumnItem('valency',               'Valency',                [ '', '', 'Valency' ]                ),
+        ColumnItem('atomicRadius',          'Atomic Radius',          [ 'Atomic', 'Radius', '(pm)' ]       ),
+        ColumnItem('density',               'Density',                [ '', 'Density', '(g/cm^3)' ]        ),
+        ColumnItem('electronegativity',     'Electronegativity',      [ '', 'Electro-', 'negativity' ]     ),
+        ColumnItem('ionizationEnergy',      'Ioization Energy',       [ 'Ionization', 'Energy', '(eV)' ]   ),
+        ColumnItem('electronAffinity',      'Electron Affinity',      [ 'Electron', 'Affinity', '(eV)' ]   ),
+        ColumnItem('meltingPoint',          'Melting Point',          [ 'Melting', 'Point', '(K)' ]        ),
+        ColumnItem('boilingPoint',          'Boiling Point',          [ 'Boiling', 'Point', '(K)' ]        ),
+        ColumnItem('specificHeat',          'Specific Heat',          [ 'Specific', 'Heat', '(J/g K)' ]    ),
+        ColumnItem('radioactive',           'Radioactive',            [ '', 'Radio-', 'active' ]           ),
+        ColumnItem('occurrence',            'Occurrence',             [ '', '', 'Occurrence' ]             ),
+        ColumnItem('yearDiscovered',        'Year',                   [ '', '', 'Year' ]                   ),
+        ColumnItem('period',                'Period',                 [ '', '', 'Period' ]                 ),
+        ColumnItem('group',                 'Group',                  [ '', '', 'Group' ]                  ),
+        ColumnItem('shell',                 'Shell',                  [ '', '', 'Shell' ]                  ),
+        ColumnItem('electronConfiguration', 'Electron Configuration', [ '', '', 'Electron Configuration' ] ),
+        ColumnItem('oxidationStates',       'Oxidation States',       [ '', '', 'Oxidation States' ]       ),
     ]
 
     def _create_grid(x, y):
@@ -87,7 +93,7 @@ class DataProcessor:
     def _render_grid(grid, full_column_config, verbose, width=None):
         sizes = []
         for i in range(len(full_column_config)):
-            title_length = DataProcessor._get_title_length(full_column_config[i]['titleParts'])
+            title_length = DataProcessor._get_title_length(full_column_config[i].title_parts)
             data_length = DataProcessor._get_column_data_length(grid, i)
             sizes.append(max(title_length, data_length))
 
@@ -112,20 +118,20 @@ class DataProcessor:
         response = '\n'
 
         # Titles
-        for j in range(len(column_config[0]['titleParts'])):
+        for j in range(len(column_config[0].title_parts)):
             response += ' '  # Left buffer
             for i in range(len(column_config)):
-                entry = DataProcessor._get_string_with_padding(column_config[i]['titleParts'][j], sizes[i], 'center')
+                entry = DataProcessor._get_string_with_padding(column_config[i].title_parts[j], sizes[i], 'center')
                 response += entry
                 if i < len(column_config) - 1:
-                    response += ' ' + DataProcessor.BOX_CHARACTERS['VERTICAL'] + ' '  # Column buffer
+                    response += ' ' + BoxCharacters.VERTICAL + ' '  # Column buffer
             response += '\n'
 
         # Border
         for i in range(len(column_config)):
-            response += DataProcessor.BOX_CHARACTERS['HORIZONTAL'] * (sizes[i] + 2)
+            response += BoxCharacters.HORIZONTAL * (sizes[i] + 2)
             if i < len(column_config) - 1:
-                response += DataProcessor.BOX_CHARACTERS['CROSS']
+                response += BoxCharacters.CROSS
         response += '\n'
 
         # Data
@@ -134,7 +140,7 @@ class DataProcessor:
             for j in range(len(column_config)):
                 response += DataProcessor._get_string_with_padding(grid[i][j], sizes[j])
                 if j < len(column_config) - 1:
-                    response += ' ' + DataProcessor.BOX_CHARACTERS['VERTICAL'] + ' '  # Column buffer
+                    response += ' ' + BoxCharacters.VERTICAL + ' '  # Column buffer
             response += '\n'
 
         if verbose:
@@ -193,26 +199,26 @@ class DataProcessor:
 
         for i, element in enumerate(elements):
             for j, config in enumerate(column_config):
-                grid[i][j] = DataProcessor._get_column_display_values(config.get('key'), element, data.get('families'), data.get('shells'))
+                grid[i][j] = DataProcessor._get_column_display_values(config.key, element, data.get('families'), data.get('shells'))
 
         return DataProcessor._render_grid(grid, column_config, verbose, width)
 
     def _format_specific_element(element, data):
         response = '\n'
         for item in DataProcessor.COLUMN_CONFIG:
-            response += ' ' + item['title'] + ': ' + DataProcessor._get_list_display_values(item['key'], element, data['families'], data['shells']) + '\n'
+            response += ' ' + item.title + ': ' + DataProcessor._get_list_display_values(item.key, element, data['families'], data['shells']) + '\n'
         response += '\n'
         return response
 
     def format_data(config, data):
         element = None
-        if config.get('atomicNumber') is not None or config.get('symbol') is not None or config.get('name') is not None:
-            if config and Utils.is_valid_atomic_number(config.get('atomicNumber')):
-                element = Utils.get_element_by_atomic_number(config.get('atomicNumber'), data.get('elements'))
-            elif config and Utils.is_valid_element_symbol(config.get('symbol'), data.get('elements')):
-                element = Utils.get_element_by_symbol(config.get('symbol'), data.get('elements'))
-            elif config and Utils.is_valid_element_name(config.get('name'), data.get('elements')):
-                element = Utils.get_element_by_name(config.get('name'), data.get('elements'))
+        if config.atomic_number is not None or config.symbol is not None or config.name is not None:
+            if config and Utils.is_valid_atomic_number(config.atomic_number):
+                element = Utils.get_element_by_atomic_number(config.atomic_number, data.get('elements'))
+            elif config and Utils.is_valid_element_symbol(config.symbol, data.get('elements')):
+                element = Utils.get_element_by_symbol(config.symbol, data.get('elements'))
+            elif config and Utils.is_valid_element_name(config.name, data.get('elements')):
+                element = Utils.get_element_by_name(config.name, data.get('elements'))
 
             if element is not None:
                 return DataProcessor._format_specific_element(element, data)
@@ -224,5 +230,5 @@ class DataProcessor:
         if sys.stdout.isatty():
             width = os.get_terminal_size().columns
 
-        verbose = config.get('verbose', False)
+        verbose = config.verbose or False
         return DataProcessor._format_all_elements(data, verbose, width)

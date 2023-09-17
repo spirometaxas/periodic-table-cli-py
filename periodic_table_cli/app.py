@@ -31,6 +31,9 @@ class App:
         self.state_controller = StateController(data, config)
         self.dashboard = Dashboard(data)
 
+        # Key setup before curses is initialized
+        os.environ.setdefault('ESCDELAY', '1')
+
     def _draw(self, window, full):
         render_config = self.state_controller.get_render_config()
         self._clear_screen(window, full)

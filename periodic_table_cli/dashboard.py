@@ -44,7 +44,7 @@ class Dashboard:
         return len(self.board)
 
     def _parse_board(self):
-        parts = DASHBOARD.split('\n')
+        parts = DASHBOARD.split(u'\n')
         board = []
 
         for part in parts:

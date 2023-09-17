@@ -10,6 +10,7 @@ class Color:
         self.G = Color._base_255_to_1000(config['G'])
         self.B = Color._base_255_to_1000(config['B'])
 
+    @staticmethod
     def _base_255_to_1000(val):
         return int((val / 255) * 1000)
 
@@ -61,6 +62,7 @@ class Colors:
 
     COLOR_TO_PAIR_ID = {}
 
+    @staticmethod
     def init_colors():
         for color in Colors.COLORS:
             if color.FG > 10:
@@ -93,9 +95,11 @@ class Colors:
         curses.init_pair(color_pair_id, Colors.MID_GREEN.FG, Colors.WHITE.BG)
         Colors.COLOR_TO_PAIR_ID[Colors._create_color_pair_key(Colors.MID_GREEN.FG, Colors.WHITE.BG)] = color_pair_id
 
+    @staticmethod
     def _create_color_pair_key(fg_color_id, bg_color_id):
         return str(fg_color_id) + '_' + str(bg_color_id)
 
+    @staticmethod
     def get_color_pair_id(fg_color_id, bg_color_id):
         color_pair_key = Colors._create_color_pair_key(fg_color_id, bg_color_id)
         if color_pair_key in Colors.COLOR_TO_PAIR_ID:

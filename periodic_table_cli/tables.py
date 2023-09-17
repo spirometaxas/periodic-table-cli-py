@@ -1,4 +1,6 @@
-PERIODIC_TABLE_SMALL = '\n'\
+# -*- coding: utf-8 -*-
+
+PERIODIC_TABLE_SMALL = u'\n'\
     '     1                                                                  18  \n'\
     '   ╔═══╗        THE PERIODIC TABLE OF ELEMENTS                         ╔═══╗\n'\
     ' 1 ║ 1 ║                                                               ║ 2 ║\n'\
@@ -31,7 +33,7 @@ PERIODIC_TABLE_SMALL = '\n'\
     '           ║ Ac║ Th║ Pa║ U ║ Np║ Pu║ Am║ Cm║ Bk║ Cf║ Es║ Fm║ Md║ No║ Lr║    \n'\
     '           ╚═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╩═══╝    \n'
 
-PERIODIC_TABLE = '\n'\
+PERIODIC_TABLE = u'\n'\
     '      1                                                                                                    18    \n'\
     '   ╔═════╗                    THE PERIODIC TABLE OF ELEMENTS                                             ╔═════╗ \n'\
     ' 1 ║  1  ║                                                                                               ║  2  ║ \n'\
@@ -64,7 +66,7 @@ PERIODIC_TABLE = '\n'\
     '               ║  Ac ║  Th ║  Pa ║  U  ║  Np ║  Pu ║  Am ║  Cm ║  Bk ║  Cf ║  Es ║  Fm ║  Md ║  No ║  Lr ║       \n'\
     '               ╚═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╩═════╝       \n'
 
-DASHBOARD = ''\
+DASHBOARD = u''\
     '                                                                                                                                                            \n'\
     '      1                                                                                                    18                                               \n'\
     '   ╔═════╗                    THE PERIODIC TABLE OF ELEMENTS                                             ╔═════╗   ┌──────────────────────────────────────┐ \n'\

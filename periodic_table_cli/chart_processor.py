@@ -28,6 +28,7 @@ class ChartProcessor:
         },
     }
 
+    @staticmethod
     def _format_specific_element(element, small):
         chart = PERIODIC_TABLE_SMALL if small else PERIODIC_TABLE
         dim = ChartProcessor.DIMENSIONS['SMALL'] if small else ChartProcessor.DIMENSIONS['STANDARD']
@@ -45,6 +46,7 @@ class ChartProcessor:
         
         return '\n'.join(lines)
 
+    @staticmethod
     def _find_element(atomic_number):
         for row, row_data in enumerate(Layout.PeriodicTable):
             for column, element_number in enumerate(row_data):
@@ -52,6 +54,7 @@ class ChartProcessor:
                     return { 'row': row, 'column': column }
         return None
 
+    @staticmethod
     def format_chart(config, data):
         small = config.small or False
         element = None

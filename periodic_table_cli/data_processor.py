@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
 from utils import Utils
@@ -46,6 +48,7 @@ class DataProcessor:
         ColumnItem('oxidationStates',       'Oxidation States',       [ '', '', 'Oxidation States' ]       ),
     ]
 
+    @staticmethod
     def _create_grid(x, y):
         grid = []
         for i in range(y):
@@ -55,6 +58,7 @@ class DataProcessor:
             grid.append(row)
         return grid
 
+    @staticmethod
     def _get_title_length(title):
         size = 0
         for t in title:
@@ -62,6 +66,7 @@ class DataProcessor:
                 size = len(t)
         return size
 
+    @staticmethod
     def _get_column_data_length(grid, c):
         size = 0
         for i in range(len(grid)):
@@ -69,6 +74,7 @@ class DataProcessor:
                 size = len(grid[i][c])
         return size
 
+    @staticmethod
     def _get_string_with_padding(text, length, alignment='left'):
         if alignment == 'left':
             if len(text) < length:
@@ -90,6 +96,7 @@ class DataProcessor:
             else:
                 return text
 
+    @staticmethod
     def _render_grid(grid, full_column_config, verbose, width=None):
         sizes = []
         for i in range(len(full_column_config)):
@@ -155,6 +162,7 @@ class DataProcessor:
 
         return response
 
+    @staticmethod
     def _get_column_display_values(key, element, families, shells):
         if key == 'family':
             return families.get(element.get(key)).get('name')
@@ -178,6 +186,7 @@ class DataProcessor:
                 return 'Yes' if value else 'No'
             return str(value)
 
+    @staticmethod
     def _get_list_display_values(key, element, families, shells):
         if key == 'family':
             return families.get(element.get(key)).get('name')
@@ -191,6 +200,7 @@ class DataProcessor:
                 return 'Yes' if value else 'No'
             return str(value)
 
+    @staticmethod
     def _format_all_elements(data, verbose, width):
         elements = sorted(data.get('elements'), key=lambda x: x.get('atomicNumber'))
 
@@ -203,6 +213,7 @@ class DataProcessor:
 
         return DataProcessor._render_grid(grid, column_config, verbose, width)
 
+    @staticmethod
     def _format_specific_element(element, data):
         response = '\n'
         for item in DataProcessor.COLUMN_CONFIG:
@@ -210,6 +221,7 @@ class DataProcessor:
         response += '\n'
         return response
 
+    @staticmethod
     def format_data(config, data):
         element = None
         if config.atomic_number is not None or config.symbol is not None or config.name is not None:

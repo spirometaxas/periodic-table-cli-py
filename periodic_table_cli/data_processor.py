@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import os
 import sys
+import subprocess
 from utils import Utils
 
 class BoxCharacters:
@@ -46,6 +49,7 @@ class DataProcessor:
         ColumnItem('oxidationStates',       'Oxidation States',       [ '', '', 'Oxidation States' ]       ),
     ]
 
+    @staticmethod
     def _create_grid(x, y):
         grid = []
         for i in range(y):
@@ -55,6 +59,7 @@ class DataProcessor:
             grid.append(row)
         return grid
 
+    @staticmethod
     def _get_title_length(title):
         size = 0
         for t in title:
@@ -62,6 +67,7 @@ class DataProcessor:
                 size = len(t)
         return size
 
+    @staticmethod
     def _get_column_data_length(grid, c):
         size = 0
         for i in range(len(grid)):
@@ -69,6 +75,7 @@ class DataProcessor:
                 size = len(grid[i][c])
         return size
 
+    @staticmethod
     def _get_string_with_padding(text, length, alignment='left'):
         if alignment == 'left':
             if len(text) < length:
@@ -90,6 +97,7 @@ class DataProcessor:
             else:
                 return text
 
+    @staticmethod
     def _render_grid(grid, full_column_config, verbose, width=None):
         sizes = []
         for i in range(len(full_column_config)):
@@ -138,7 +146,7 @@ class DataProcessor:
         for i in range(len(grid)):
             response += ' '
             for j in range(len(column_config)):
-                response += DataProcessor._get_string_with_padding(grid[i][j], sizes[j])
+                response += str(DataProcessor._get_string_with_padding(grid[i][j], sizes[j]))
                 if j < len(column_config) - 1:
                     response += ' ' + BoxCharacters.VERTICAL + ' '  # Column buffer
             response += '\n'
@@ -155,6 +163,7 @@ class DataProcessor:
 
         return response
 
+    @staticmethod
     def _get_column_display_values(key, element, families, shells):
         if key == 'family':
             return families.get(element.get(key)).get('name')
@@ -178,6 +187,7 @@ class DataProcessor:
                 return 'Yes' if value else 'No'
             return str(value)
 
+    @staticmethod
     def _get_list_display_values(key, element, families, shells):
         if key == 'family':
             return families.get(element.get(key)).get('name')
@@ -191,6 +201,7 @@ class DataProcessor:
                 return 'Yes' if value else 'No'
             return str(value)
 
+    @staticmethod
     def _format_all_elements(data, verbose, width):
         elements = sorted(data.get('elements'), key=lambda x: x.get('atomicNumber'))
 
@@ -203,6 +214,7 @@ class DataProcessor:
 
         return DataProcessor._render_grid(grid, column_config, verbose, width)
 
+    @staticmethod
     def _format_specific_element(element, data):
         response = '\n'
         for item in DataProcessor.COLUMN_CONFIG:
@@ -210,6 +222,7 @@ class DataProcessor:
         response += '\n'
         return response
 
+    @staticmethod
     def format_data(config, data):
         element = None
         if config.atomic_number is not None or config.symbol is not None or config.name is not None:
@@ -228,7 +241,11 @@ class DataProcessor:
         # Element was not specified, so display the full chart
         width = None
         if sys.stdout.isatty():
-            width = os.get_terminal_size().columns
+            if sys.version_info[0] > 3 or (sys.version_info[0] == 3 and sys.version_info[1] >= 3):
+                # Available in Python 3.3+
+                width = os.get_terminal_size().columns
+            else:
+                width = int(subprocess.check_output(['stty', 'size']).split()[1])
 
         verbose = config.verbose or False
         return DataProcessor._format_all_elements(data, verbose, width)

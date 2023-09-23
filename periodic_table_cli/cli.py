@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 import os
 import json
@@ -5,8 +7,9 @@ import curses
 from data_processor import DataProcessor
 from chart_processor import ChartProcessor
 from app import App
+import locale
 
-class AppConfig:
+class AppConfig(object):
 
     def __init__(self, atomic_number, symbol, name):
         self.atomic_number = atomic_number
@@ -16,13 +19,13 @@ class AppConfig:
 class DataConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, verbose):
-        super().__init__(atomic_number, symbol, name)
+        super(DataConfig, self).__init__(atomic_number, symbol, name)
         self.verbose = verbose
 
 class ChartConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, small):
-        super().__init__(atomic_number, symbol, name)
+        super(ChartConfig, self).__init__(atomic_number, symbol, name)
         self.small = small
 
 class MODES:
@@ -144,6 +147,7 @@ def load_data():
 
 def main():
     os.system('')  # Enable ANSI escape sequences on Windows
+    locale.setlocale(locale.LC_ALL, '')
 
     mode = MODES.APP
     atomic_number = None

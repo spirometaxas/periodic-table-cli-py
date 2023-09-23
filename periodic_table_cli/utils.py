@@ -1,8 +1,10 @@
 class Utils:
 
+    @staticmethod
     def get_elements(elements):
         return { element['atomicNumber']: element for element in elements }
 
+    @staticmethod
     def get_families(elements):
         families = {}
         for element in elements:
@@ -12,6 +14,7 @@ class Utils:
                 families[element.get('family')].append(element)
         return families
 
+    @staticmethod
     def get_shells(elements):
         shells = {}
         for element in elements:
@@ -21,9 +24,11 @@ class Utils:
                 shells[element.get('shell')].append(element)
         return shells
 
+    @staticmethod
     def is_valid_atomic_number(atomic_number):
         return atomic_number and atomic_number >= 1 and atomic_number <= 118
 
+    @staticmethod
     def get_element_by_atomic_number(atomic_number, elements):
         if atomic_number is None:
             return None
@@ -32,6 +37,7 @@ class Utils:
                 return element
         return None
 
+    @staticmethod
     def is_valid_element_name(name, elements):
         if name is None:
             return False
@@ -40,6 +46,7 @@ class Utils:
                 return True
         return False
 
+    @staticmethod
     def get_element_by_name(name, elements):
         if name is None:
             return None
@@ -48,6 +55,7 @@ class Utils:
                 return element
         return None
 
+    @staticmethod
     def is_valid_element_symbol(symbol, elements):
         if symbol is None:
             return False
@@ -56,6 +64,7 @@ class Utils:
                 return True
         return False
 
+    @staticmethod
     def get_element_by_symbol(symbol, elements):
         if symbol is None:
             return None
@@ -64,6 +73,7 @@ class Utils:
                 return element
         return None
 
+    @staticmethod
     def is_bottom_section(atomic_number):
         # Lanthanide or Actinide
         return (atomic_number >= 57 and atomic_number <= 71) or (atomic_number >= 89 and atomic_number <= 103)

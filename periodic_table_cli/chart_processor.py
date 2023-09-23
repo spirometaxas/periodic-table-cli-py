@@ -6,8 +6,8 @@ from tables import PERIODIC_TABLE_SMALL, PERIODIC_TABLE
 
 class ChartProcessor:
 
-    HIGHLIGHT = '\u001b[7m'
-    OFF = '\u001b[0m'
+    HIGHLIGHT = u'\u001b[7m'
+    OFF = u'\u001b[0m'
 
     DIMENSIONS = {
         'SMALL': {

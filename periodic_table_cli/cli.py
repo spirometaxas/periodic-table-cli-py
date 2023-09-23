@@ -9,7 +9,7 @@ from chart_processor import ChartProcessor
 from app import App
 import locale
 
-class AppConfig:
+class AppConfig(object):
 
     def __init__(self, atomic_number, symbol, name):
         self.atomic_number = atomic_number
@@ -19,13 +19,13 @@ class AppConfig:
 class DataConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, verbose):
-        super().__init__(atomic_number, symbol, name)
+        super(DataConfig, self).__init__(atomic_number, symbol, name)
         self.verbose = verbose
 
 class ChartConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, small):
-        super().__init__(atomic_number, symbol, name)
+        super(ChartConfig, self).__init__(atomic_number, symbol, name)
         self.small = small
 
 class MODES:
@@ -36,7 +36,7 @@ class MODES:
 DATA_FILE = 'data.json'
 
 def print_usage():
-    print(u'\n'\
+    print('\n'\
         '           ╔═╗                               ╔═╗ \n'\
         '           ╠═╬═╗                   ╔═╦═╦═╦═╦═╬═╣ \n'\
         '           ╠═╬═╣                   ╠═╬═╬═╬═╬═╬═╣ \n'\

@@ -2,6 +2,7 @@
 
 import os
 import sys
+import subprocess
 from utils import Utils
 
 class BoxCharacters:
@@ -145,7 +146,7 @@ class DataProcessor:
         for i in range(len(grid)):
             response += ' '
             for j in range(len(column_config)):
-                response += DataProcessor._get_string_with_padding(grid[i][j], sizes[j])
+                response += str(DataProcessor._get_string_with_padding(grid[i][j], sizes[j]))
                 if j < len(column_config) - 1:
                     response += ' ' + BoxCharacters.VERTICAL + ' '  # Column buffer
             response += '\n'
@@ -240,7 +241,11 @@ class DataProcessor:
         # Element was not specified, so display the full chart
         width = None
         if sys.stdout.isatty():
-            width = os.get_terminal_size().columns
+            if sys.version_info[0] > 3 or (sys.version_info[0] == 3 and sys.version_info[1] >= 3):
+                # Available in Python 3.3+
+                width = os.get_terminal_size().columns
+            else:
+                width = int(subprocess.check_output(['stty', 'size']).split()[1])
 
         verbose = config.verbose or False
         return DataProcessor._format_all_elements(data, verbose, width)

@@ -12,7 +12,7 @@ class Color:
 
     @staticmethod
     def _base_255_to_1000(val):
-        return int((val / 255) * 1000)
+        return int((val / 255.0) * 1000)
 
 class Colors:
     BLACK       = Color({ 'FG':  0, 'BG':  0, 'ANSI':   0, 'R':   0, 'G':   0, 'B':   0 })  # Use default black

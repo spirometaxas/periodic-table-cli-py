@@ -20,10 +20,10 @@ class DisplayModes:
     SHELLS            = DisplayMode('shells'                                       )
     STATES            = DisplayMode('states',            'standardState'           )
     ATOMIC_MASS       = DisplayMode('atomicMass',        'atomicMass',        True )
-    PROTONS           = DisplayMode('protons',           'numberofProtons',   True )
+    PROTONS           = DisplayMode('protons',           'numberOfProtons',   True )
     NEUTRONS          = DisplayMode('neutrons',          'numberOfNeutrons',  True )
-    ELECTRONS         = DisplayMode('electrons',         'numberofElectrons', True )
-    VALENCE_ELECTRONS = DisplayMode('numberofValence',   'numberofValence'         )
+    ELECTRONS         = DisplayMode('electrons',         'numberOfElectrons', True )
+    VALENCE_ELECTRONS = DisplayMode('numberOfValence',   'numberOfValence'         )
     VALENCY           = DisplayMode('valency',           'valency'                 )
     ATOMIC_RADIUS     = DisplayMode('atomicRadius',      'atomicRadius',      True )
     DENSITY           = DisplayMode('density',           'density',           True )
@@ -78,10 +78,10 @@ class Layout:
         PanelItem('symbol',                'Symbol'            ),
         PanelItem('standardState',         'State'             ),
         PanelItem('atomicMass',            'Atomic Mass'       ),
-        PanelItem('numberofProtons',       'Protons'           ),
+        PanelItem('numberOfProtons',       'Protons'           ),
         PanelItem('numberOfNeutrons',      'Neutrons'          ),
-        PanelItem('numberofElectrons',     'Electrons'         ),
-        PanelItem('numberofValence',       'Valence Electrons' ),
+        PanelItem('numberOfElectrons',     'Electrons'         ),
+        PanelItem('numberOfValence',       'Valence Electrons' ),
         PanelItem('valency',               'Valency'           ),
         PanelItem('atomicRadius',          'Atomic Radius'     ),
         PanelItem('density',               'Density'           ),
@@ -250,10 +250,10 @@ class StateController:
     def init_meter_config(self):
         field_formatters = {
             'atomicMass': (lambda v: Utils.parse_number(v, len(' u'))),
-            'numberofProtons': (lambda v: Utils.parse_number(v)),
+            'numberOfProtons': (lambda v: Utils.parse_number(v)),
             'numberOfNeutrons': (lambda v: Utils.parse_number(v)),
-            'numberofElectrons': (lambda v: Utils.parse_number(v)),
-            'numberofValence': (lambda v: Utils.parse_number(v)),
+            'numberOfElectrons': (lambda v: Utils.parse_number(v)),
+            'numberOfValence': (lambda v: Utils.parse_number(v)),
             'valency': (lambda v: Utils.parse_number(v)),
             'atomicRadius': (lambda v: Utils.parse_number(v, len(' pm'))),
             'density': (lambda v: Utils.parse_number(v, len(' g/cm^3'))),
@@ -516,7 +516,7 @@ class StateController:
                     elif self.current_display_mode == DisplayModes.STATES:
                         config.display.state = self.elements[Layout.PeriodicTable[r][c]].get('standardState')
                     elif self.current_display_mode == DisplayModes.VALENCE_ELECTRONS:
-                        config.display.valenceElectrons = self.elements[Layout.PeriodicTable[r][c]].get('numberofValence')
+                        config.display.valenceElectrons = self.elements[Layout.PeriodicTable[r][c]].get('numberOfValence')
                     elif self.current_display_mode == DisplayModes.VALENCY:
                         config.display.valency = self.elements[Layout.PeriodicTable[r][c]].get('valency')
                     elif self.current_display_mode == DisplayModes.RADIOACTIVE:

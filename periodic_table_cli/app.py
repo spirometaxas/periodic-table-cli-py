@@ -6,7 +6,7 @@ from dashboard import Dashboard
 from colors import Colors
 import os
 
-DEGUG_MODE = True  # TODO: Set to False
+DEGUG_MODE = True  # TODO: Set to False, remove unknown color logs from colors.py
 
 class KeyMap:
     ESC       = 27
@@ -37,7 +37,7 @@ class App:
     def _draw(self, window, full):
         render_config = self.state_controller.get_render_config()
         self._clear_screen(window, full)
-        self.dashboard.render(render_config);
+        self.dashboard.render(render_config)
         window.refresh()
 
     def _clear_screen(self, window, full):

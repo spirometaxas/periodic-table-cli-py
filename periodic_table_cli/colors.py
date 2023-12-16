@@ -85,10 +85,18 @@ class Colors:
             Colors.COLOR_TO_PAIR_ID[Colors._create_color_pair_key(Colors.BLACK.FG, bg_color.BG)] = color_pair_id
             color_pair_id = color_pair_id + 1
 
+            curses.init_pair(color_pair_id, Colors.WHITE.FG, bg_color.BG)
+            Colors.COLOR_TO_PAIR_ID[Colors._create_color_pair_key(Colors.WHITE.FG, bg_color.BG)] = color_pair_id
+            color_pair_id = color_pair_id + 1
+
         # Background meter colors
         for meter_color in Colors.METER_COLORS:
             curses.init_pair(color_pair_id, Colors.BLACK.FG, meter_color.BG)
             Colors.COLOR_TO_PAIR_ID[Colors._create_color_pair_key(Colors.BLACK.FG, meter_color.BG)] = color_pair_id
+            color_pair_id = color_pair_id + 1
+
+            curses.init_pair(color_pair_id, Colors.WHITE.FG, meter_color.BG)
+            Colors.COLOR_TO_PAIR_ID[Colors._create_color_pair_key(Colors.WHITE.FG, meter_color.BG)] = color_pair_id
             color_pair_id = color_pair_id + 1
 
         # Search colors

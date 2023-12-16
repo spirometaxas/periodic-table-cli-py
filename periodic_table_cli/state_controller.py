@@ -140,12 +140,12 @@ class BoardItemConfig:
             self.family = None
             self.shell = None
             self.state = None
-            self.valenceElectrons = None
+            self.valence_electrons = None
             self.valency = None
             self.radioactive = None
             self.occurrence = None
             self.meter = None
-            self.isAncient = None
+            self.is_ancient = None
 
     def __init__(self, atomic_number):
         self.atomic_number = atomic_number
@@ -516,7 +516,7 @@ class StateController:
                     elif self.current_display_mode == DisplayModes.STATES:
                         config.display.state = self.elements[Layout.PeriodicTable[r][c]].get('standardState')
                     elif self.current_display_mode == DisplayModes.VALENCE_ELECTRONS:
-                        config.display.valenceElectrons = self.elements[Layout.PeriodicTable[r][c]].get('numberOfValence')
+                        config.display.valence_electrons = self.elements[Layout.PeriodicTable[r][c]].get('numberOfValence')
                     elif self.current_display_mode == DisplayModes.VALENCY:
                         config.display.valency = self.elements[Layout.PeriodicTable[r][c]].get('valency')
                     elif self.current_display_mode == DisplayModes.RADIOACTIVE:
@@ -526,7 +526,7 @@ class StateController:
                     elif self.current_display_mode and self.current_display_mode.is_meter:
                         config.display.meter = self.elements[Layout.PeriodicTable[r][c]]['meter_config'].get(self.current_display_mode.key)
                         if self.current_display_mode == DisplayModes.YEAR:
-                            config.display.isAncient = True if self.elements[Layout.PeriodicTable[r][c]].get(self.current_display_mode.key) == 'Ancient' else None
+                            config.display.is_ancient = True if self.elements[Layout.PeriodicTable[r][c]].get(self.current_display_mode.key) == 'Ancient' else None
                     board[Layout.PeriodicTable[r][c]] = config
 
         if self.current_focus.type == SelectModes.ELEMENT:
@@ -560,7 +560,7 @@ class StateController:
         render_config.shells = shells
         render_config.group = group
         render_config.period = period
-        render_config.displayMode = self.current_display_mode
+        render_config.display_mode = self.current_display_mode
         render_config.panel = panel
         render_config.mode = self.current_focus.type
         return render_config

@@ -59,6 +59,7 @@ class App:
             try:
                 key = window.getch()
                 key_char = self._get_key_char(key)
+                curses.flushinp()
 
                 if key == curses.KEY_RESIZE:
                     curses.resize_term(0, 0)

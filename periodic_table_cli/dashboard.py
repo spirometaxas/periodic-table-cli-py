@@ -535,6 +535,148 @@ class Dashboard:
             group_config = self.GROUP_POS[config.group]
             self._set_text_color(group_config.x, group_config.y, group_config.length, Colors.FOCUS_GOLD, False)
 
+    def _set_display_mode(self, config):
+        if config.display_mode == DisplayModes.STANDARD:
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'STANDARD', self.DISPLAY_CONFIG.length, 'center')
+        elif config.display_mode == DisplayModes.FAMILIES:
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'ELEMENT FAMILIES', self.DISPLAY_CONFIG.length, 'center')
+            self._set_highlight_color(
+                self.TITLES['ELEMENT_FAMILIES'].x - 2,
+                self.TITLES['ELEMENT_FAMILIES'].y,
+                self.TITLES['ELEMENT_FAMILIES'].length + 4,
+                Colors.WHITE,
+            )
+        elif config.display_mode == DisplayModes.SHELLS:
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'ELECTRON CONFIGURATIONS', self.DISPLAY_CONFIG.length, 'center')
+            self._set_highlight_color(
+                self.TITLES['ELEMENT_CONFIGURATIONS'].x - 2,
+                self.TITLES['ELEMENT_CONFIGURATIONS'].y,
+                self.TITLES['ELEMENT_CONFIGURATIONS'].length + 4,
+                Colors.WHITE,
+            )
+        elif config.display_mode == DisplayModes.STATES:
+            section_length = int(self.DISPLAY_CONFIG.length / 3)
+            self._set_highlight_color(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, section_length - 1, self.STATES_CONFIG['Solid'].color)
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'SOLID', section_length - 1, 'center')
+
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, section_length, self.STATES_CONFIG['Liquid'].color)
+            self._set_text(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, 'LIQUID', section_length, 'center')
+
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + (2 * section_length) + 1, self.DISPLAY_CONFIG.y, section_length - 1, self.STATES_CONFIG['Gas'].color)
+            self._set_text(self.DISPLAY_CONFIG.x + (2 * section_length) + 1, self.DISPLAY_CONFIG.y, 'GAS', section_length - 1, 'center')
+        elif config.display_mode == DisplayModes.VALENCE_ELECTRONS:
+            section_length = int(self.DISPLAY_CONFIG.length / 2)
+            part_length = 2
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'VALENCE ELECTRONS', section_length, 'center')
+            count = 0
+            for i in range(self.VALENCE_ELECTRON_CONFIG['min_value'], self.VALENCE_ELECTRON_CONFIG['max_value'] + 1):
+                self._set_highlight_color(
+                    self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 2,
+                    self.DISPLAY_CONFIG.y,
+                    part_length,
+                    self.VALENCE_ELECTRON_CONFIG['colors'][i].color,
+                )
+                self._set_text(
+                    self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 2,
+                    self.DISPLAY_CONFIG.y,
+                    ' ' + str(i),
+                    part_length,
+                    'left',
+                )
+                count += 1
+        elif config.display_mode == DisplayModes.VALENCY:
+            section_length = int(self.DISPLAY_CONFIG.length / 2)
+            part_length = 3
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'VALENCY', section_length, 'center')
+            count = 0
+            for i in range(self.VALENCY_CONFIG['min_value'], self.VALENCY_CONFIG['max_value'] + 1):
+                self._set_highlight_color(
+                    self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 3,
+                    self.DISPLAY_CONFIG.y,
+                    part_length,
+                    self.VALENCY_CONFIG['colors'][i].color,
+                )
+                self._set_text(
+                    self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 3,
+                    self.DISPLAY_CONFIG.y,
+                    str(i),
+                    part_length,
+                    'center',
+                )
+                count += 1
+        elif config.display_mode == DisplayModes.RADIOACTIVE:
+            section_length = int(self.DISPLAY_CONFIG.length / 2)
+            self._set_highlight_color(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, section_length - 1, self.RADIOACTIVE_CONFIG[True].color)
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'RADIOACTIVE', section_length - 1, 'center')
+
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, section_length, self.RADIOACTIVE_CONFIG[False].color)
+            self._set_text(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, 'STABLE', section_length, 'center')
+        elif config.display_mode == DisplayModes.OCCURRENCE:
+            section_length = int(self.DISPLAY_CONFIG.length / 3)
+            self._set_highlight_color(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, section_length - 1, self.OCCURRENCE_CONFIG['Natural'].color)
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'NATURAL', section_length - 1, 'center')
+
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, section_length, self.OCCURRENCE_CONFIG['Rare'].color)
+            self._set_text(self.DISPLAY_CONFIG.x + section_length, self.DISPLAY_CONFIG.y, 'RARE', section_length, 'center')
+
+            self._set_highlight_color(
+                self.DISPLAY_CONFIG.x + (2 * section_length) + 1,
+                self.DISPLAY_CONFIG.y,
+                section_length - 1,
+                self.OCCURRENCE_CONFIG['Synthetic'].color,
+            )
+            self._set_text(
+                self.DISPLAY_CONFIG.x + (2 * section_length) + 1,
+                self.DISPLAY_CONFIG.y,
+                'SYNTHETIC',
+                section_length - 1,
+                'center',
+            )
+        elif config.display_mode == DisplayModes.YEAR:
+            section_length = int(self.DISPLAY_CONFIG.length / 2)
+            self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'YEAR', section_length - 9, 'center')
+
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length - 8, self.DISPLAY_CONFIG.y, 9, self.YEAR_CONFIG['colors']['ANCIENT'])
+            self._set_text(self.DISPLAY_CONFIG.x + section_length - 8, self.DISPLAY_CONFIG.y, 'ANCIENT', 9, 'center')
+
+            for i in range(len(Colors.METER_COLORS)):
+                self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length + i + 2, self.DISPLAY_CONFIG.y, 1, Colors.METER_COLORS[i])
+
+            self._set_text_color(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, 4, Colors.BLACK, False)
+            self._set_text(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG['min_value']), 4, 'left')
+
+            self._set_text_color(self.DISPLAY_CONFIG.x + (2 * section_length) - 5, self.DISPLAY_CONFIG.y, 4, Colors.BLACK, False)
+            self._set_text(self.DISPLAY_CONFIG.x + (2 * section_length) - 5, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG['max_value']), 4, 'left')
+        elif config.display_mode and config.display_mode.is_meter:
+            section_length = int(self.DISPLAY_CONFIG.length / 2)
+            self._set_text(
+                self.DISPLAY_CONFIG.x,
+                self.DISPLAY_CONFIG.y,
+                self._get_field_name(config.display_mode.key).upper(),
+                section_length,
+                'center',
+            )
+            for i in range(len(Colors.METER_COLORS)):
+                self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length + i + 2, self.DISPLAY_CONFIG.y, 1, Colors.METER_COLORS[i])
+
+            self._set_text_color(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, 3, Colors.BLACK, False)
+            self._set_text(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, 'MIN', 3, 'left')
+
+            self._set_text_color(self.DISPLAY_CONFIG.x + (2 * section_length) - 4, self.DISPLAY_CONFIG.y, 3, Colors.BLACK, False)
+            self._set_text(self.DISPLAY_CONFIG.x + (2 * section_length) - 4, self.DISPLAY_CONFIG.y, 'MAX', 3, 'left')
+
+    def _get_field_name(self, key):
+        for data in Layout.PanelData:
+            if data.key == key:
+                return data.name
+        return None
+
+    def _get_field_index(self, key):
+        for i, data in enumerate(Layout.PanelData):
+            if data.key == key:
+                return i
+        return None
+
     def _get_full_screen_board(self):
         full_rows, full_columns = self.window.getmaxyx()
         full_columns = full_columns - 1
@@ -575,6 +717,7 @@ class Dashboard:
         self._reset_board()
         self._set_background()
         self._decorate_titles()
+        self._set_display_mode(render_config)
         # TODO: Update board
         self._apply_config_to_elements(render_config)
         self._draw()

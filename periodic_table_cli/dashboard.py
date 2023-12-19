@@ -849,7 +849,7 @@ class Dashboard:
 
     def _draw(self):
         full_board = self._get_full_screen_board()
-        Renderer.generate_standard(full_board, self.window)
+        Renderer.generate_optimized(full_board, self.window)
 
     def render(self, render_config):
         self._reset_board()

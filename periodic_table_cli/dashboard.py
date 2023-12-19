@@ -4,6 +4,7 @@ from renderer import Renderer
 from tables import DASHBOARD
 from utils import Utils
 from state_controller import Layout, DisplayModes, SelectModes
+from search_processor import SearchResultType
 import os
 
 class BoardItem:
@@ -677,6 +678,143 @@ class Dashboard:
                 return i
         return None
 
+    def _get_lines_from_description(self, text):
+        parts = text.split(' ')
+        lines = []
+        line = ''
+        for part in parts:
+            if len(line) + len(part) <= self.PANEL_CONFIG['WIDTH']:
+                line += part
+            else:
+                lines.append(line)
+                line = part
+            if len(line) < self.PANEL_CONFIG['WIDTH']:
+                line += ' '
+        lines.append(line)
+        return lines
+
+    def _populate_panel(self, config):
+        if config.mode == SelectModes.SEARCH:
+            self._populate_search_panel(config)
+        else:
+            self._populate_data_panel(config)
+
+    def _populate_data_panel(self, config):
+        # Top
+        if config.panel and config.panel.top:
+            if config.panel.top.element:
+                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], Colors.FOCUS_GOLD, True)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.element, self.PANEL_CONFIG['WIDTH'], 'center')
+            elif config.panel.top.family:
+                color = self.FAMILIES_CONFIG[config.panel.top.id].color
+                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.family, self.PANEL_CONFIG['WIDTH'], 'center')
+            elif config.panel.top.shell:
+                color = self.SHELLS_CONFIG[config.panel.top.id].color
+                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.shell, self.PANEL_CONFIG['WIDTH'], 'center')
+
+        # List
+        if config.panel.bottom and config.panel.bottom.list:
+            current_y = self.PANEL_CONFIG['LIST_POS'].y
+            has_expected = False
+            for pair in config.panel.bottom.list:
+                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, int(self.PANEL_CONFIG['WIDTH'] / 2), Colors.GRAY, False)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, pair.key + ':', int(self.PANEL_CONFIG['WIDTH'] / 2), 'right')
+
+                value = self._get_panel_value(pair.value)
+                if len(value) + 1 > self.PANEL_CONFIG['WIDTH'] / 2:
+                    current_y += 1
+                    self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, self.PANEL_CONFIG['WIDTH'], Colors.WHITE, False)
+                    self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, ' ' + value, self.PANEL_CONFIG['WIDTH'], 'right')
+                else:
+                    color = Colors.WHITE
+                    if pair.value is None:
+                        color = Colors.GRAY
+
+                    self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + int(self.PANEL_CONFIG['WIDTH'] / 2), current_y, int(self.PANEL_CONFIG['WIDTH'] / 2), color, False)
+                    self._set_text(self.PANEL_CONFIG['TOP_POS'].x + int(self.PANEL_CONFIG['WIDTH'] / 2), current_y, ' ' + self._get_panel_value(pair.value), self.PANEL_CONFIG['WIDTH'] / 2, 'left')
+
+                    if value is not None and value.endswith(' **'):
+                        has_expected = True
+
+                current_y += 1
+
+            if config.display_mode and config.display_mode.key:
+                field_index = self._get_field_index(config.display_mode.key)
+                self._set_highlight_color(self.PANEL_CONFIG['LIST_POS'].x - 1, self.PANEL_CONFIG['LIST_POS'].y + field_index, self.PANEL_CONFIG['WIDTH'] + 2, Colors.WHITE)
+
+            if has_expected:
+                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, '** Expected', self.PANEL_CONFIG['WIDTH'], 'right')
+        elif config.panel.bottom and config.panel.bottom.description:
+            lines = self._get_lines_from_description(config.panel.bottom.description)
+            current_y = self.PANEL_CONFIG['LIST_POS'].y
+            for line in lines:
+                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, self.PANEL_CONFIG['WIDTH'], Colors.LIGHT_GRAY, False)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, line, self.PANEL_CONFIG['WIDTH'], 'left')
+                current_y += 1
+
+    def _populate_search_panel(self, config):
+        has_results = config.panel.bottom and config.panel.bottom.results and len(config.panel.bottom.results) > 0
+
+        # Top
+        if config.panel and config.panel.top:
+            if config.panel.top.query:
+                color = self.SEARCH_CONFIG['colors']['RESULTS'] if has_results else self.SEARCH_CONFIG['colors']['NO_RESULTS']
+                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
+                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.query, self.PANEL_CONFIG['WIDTH'], 'center')
+
+        # Bottom
+        if has_results:
+            highlight_length = len(config.panel.top.query) if config.panel.top.query else 0
+            name_offset = 5
+
+            if config.panel.bottom.index is not None:
+                self._set_highlight_color(self.PANEL_CONFIG['LIST_POS'].x - 1, self.PANEL_CONFIG['LIST_POS'].y + config.panel.bottom.index, self.PANEL_CONFIG['WIDTH'] + 2, Colors.WHITE)
+
+            for i, item in enumerate(config.panel.bottom.results):
+                is_selected = config.panel.bottom.index == i
+                selected_color = self.SEARCH_CONFIG['colors']['RESULTS_FOCUSED'] if is_selected else self.SEARCH_CONFIG['colors']['RESULTS']
+
+                if item.type == SearchResultType.ELEMENT:
+                    if item.atomic_number is not None:
+                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.atomic_number.text, 3, 'left')
+                        if item.atomic_number.index is not None:
+                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.atomic_number.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                    elif item.atomic_symbol is not None:
+                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.atomic_symbol.text, 2, 'left')
+                        if item.atomic_symbol.index is not None:
+                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.atomic_symbol.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                    if item.name:
+                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x + name_offset, self.PANEL_CONFIG['LIST_POS'].y + i, item.name.text, self.PANEL_CONFIG['WIDTH'] - name_offset, 'left')
+                        if item.name.index is not None:
+                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.name.index + name_offset, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                else:
+                    if item.name:
+                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.name.text, self.PANEL_CONFIG['WIDTH'], 'left')
+                        if item.name.index is not None:
+                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.name.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+
+            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 2, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
+            self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 2, 'Navigation:<UP|DOWN>  Select:<ENTER>', self.PANEL_CONFIG['WIDTH'], 'center')
+        else:
+            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
+            self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y, 'NO RESULTS', self.PANEL_CONFIG['WIDTH'], 'center')
+
+        self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
+        self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, 'Exit Search:<LEFT>', self.PANEL_CONFIG['WIDTH'], 'center')
+
+    def _get_panel_value(self, value):
+        if value is not None:
+            if value is True:
+                return 'Yes'
+            elif value is False:
+                return 'No'
+            return str(value)
+        else:
+            return '-'
+
     def _get_full_screen_board(self):
         full_rows, full_columns = self.window.getmaxyx()
         full_columns = full_columns - 1
@@ -718,6 +856,6 @@ class Dashboard:
         self._set_background()
         self._decorate_titles()
         self._set_display_mode(render_config)
-        # TODO: Update board
         self._apply_config_to_elements(render_config)
+        self._populate_panel(render_config)
         self._draw()

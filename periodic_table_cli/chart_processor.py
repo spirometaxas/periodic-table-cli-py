@@ -61,11 +61,11 @@ class ChartProcessor:
 
         if config.atomic_number is not None or config.symbol is not None or config.name is not None:
             if config.atomic_number is not None and Utils.is_valid_atomic_number(config.atomic_number):
-                element = Utils.get_element_by_atomic_number(config.atomic_number, data['elements'])
-            elif config.symbol is not None and Utils.is_valid_element_symbol(config.symbol, data['elements']):
-                element = Utils.get_element_by_symbol(config.symbol, data['elements'])
-            elif config.name is not None and Utils.is_valid_element_name(config.name, data['elements']):
-                element = Utils.get_element_by_name(config.name, data['elements'])
+                element = Utils.get_element_by_atomic_number(config.atomic_number, data.get('elements'))
+            elif config.symbol is not None and Utils.is_valid_element_symbol(config.symbol, data.get('elements')):
+                element = Utils.get_element_by_symbol(config.symbol, data.get('elements'))
+            elif config.name is not None and Utils.is_valid_element_name(config.name, data.get('elements')):
+                element = Utils.get_element_by_name(config.name, data.get('elements'))
 
             if element is not None:
                 return ChartProcessor._format_specific_element(element, small)

@@ -49,6 +49,18 @@ class ColorConfig:
     def __init__(self, color):
         self.color = color
 
+class ColorsConfig:
+
+    def __init__(self, colors):
+        self.colors = colors
+
+class MinMaxColors(ColorsConfig):
+
+    def __init__(self, min_value, max_value, colors):
+        super(MinMaxColors, self).__init__(colors)
+        self.min_value = min_value
+        self.max_value = max_value
+
 class Dashboard:
 
     HORIZONTAL_RATIO = 0.5
@@ -106,8 +118,10 @@ class Dashboard:
         'Gas **':    ColorConfig(Colors.BLUE),
     }
 
-    VALENCE_ELECTRON_CONFIG = {
-        'colors': {
+    VALENCE_ELECTRON_CONFIG = MinMaxColors(
+        1,  # Min value
+        8,  # Max value
+        {
             1: ColorConfig(Colors.PURPLE),
             2: ColorConfig(Colors.MAGENTA),
             3: ColorConfig(Colors.BLUE),
@@ -116,22 +130,18 @@ class Dashboard:
             6: ColorConfig(Colors.YELLOW),
             7: ColorConfig(Colors.ORANGE),
             8: ColorConfig(Colors.RED),
-        },
-        'min_value': 1,
-        'max_value': 8,
-    }
+        })
 
-    VALENCY_CONFIG = {
-        'colors': {
+    VALENCY_CONFIG = MinMaxColors(
+        0,  # Min value
+        4,  # Max value
+        {
             0: ColorConfig(Colors.SKY_BLUE),
             1: ColorConfig(Colors.GREEN),
             2: ColorConfig(Colors.YELLOW),
             3: ColorConfig(Colors.ORANGE),
             4: ColorConfig(Colors.RED),
-        },
-        'min_value': 0,
-        'max_value': 4,
-    }
+        })
 
     RADIOACTIVE_CONFIG = {
         True:  ColorConfig(Colors.RED),
@@ -144,13 +154,12 @@ class Dashboard:
         'Synthetic': ColorConfig(Colors.ORANGE),
     }
 
-    YEAR_CONFIG = {
-        'min_value': 1669,
-        'max_value': 2010,
-        'colors': {
+    YEAR_CONFIG = MinMaxColors(
+        1669,  # Min value
+        2010,  # Max value
+        {
             'ANCIENT': Colors.WHITE,
-        },
-    }
+        })
 
     PERIOD_POS = {
         1: PointLength( 1,  3, 1 ),
@@ -183,12 +192,12 @@ class Dashboard:
         18: PointLength( 107,  1, 2 ),
     }
 
-    PANEL_CONFIG = {
-        'TOP_POS':  Point(117, 3),
-        'LIST_POS': Point(117, 5),
-        'WIDTH': 36,
-        'HEIGHT': 26,
-    }
+    class PanelConfig:
+        TOP_POS =  Point(117, 3)
+        LIST_POS = Point(117, 5)
+        WIDTH = 36
+        HEIGHT = 26
+    PANEL_CONFIG = PanelConfig()
 
     TITLES = {
         'THE_PERIODIC_TABLE_OF_ELEMENTS': PointLength(  30,  2, 30 ),  # The Periodic Table of Elements
@@ -198,13 +207,11 @@ class Dashboard:
         'CONTROLS':                       PointLength( 131, 39,  8 ),  # Controls
     }
 
-    SEARCH_CONFIG = {
-        'colors': {
-            'RESULTS':         Colors.GREEN,
-            'RESULTS_FOCUSED': Colors.MID_GREEN,
-            'NO_RESULTS':      Colors.RED,
-        },
-    }
+    class SearchConfig:
+        RESULTS         = Colors.GREEN
+        RESULTS_FOCUSED = Colors.MID_GREEN
+        NO_RESULTS      = Colors.RED
+    SEARCH_CONFIG = ColorsConfig(SearchConfig())
 
 
     def __init__(self, data):
@@ -317,10 +324,10 @@ class Dashboard:
         elif display_mode == DisplayModes.STATES:
             return self.STATES_CONFIG[element.display.state].color
         elif display_mode == DisplayModes.VALENCE_ELECTRONS:
-            config = self.VALENCE_ELECTRON_CONFIG['colors'].get(element.display.valence_electrons)
+            config = self.VALENCE_ELECTRON_CONFIG.colors.get(element.display.valence_electrons)
             return config.color if config is not None else None
         elif display_mode == DisplayModes.VALENCY:
-            config = self.VALENCY_CONFIG['colors'].get(element.display.valency)
+            config = self.VALENCY_CONFIG.colors.get(element.display.valency)
             return config.color if config is not None else None
         elif display_mode == DisplayModes.RADIOACTIVE:
             config = self.RADIOACTIVE_CONFIG.get(element.display.radioactive)
@@ -332,7 +339,7 @@ class Dashboard:
             color_index = Utils.get_bucket_value(element.display.meter, len(Colors.METER_COLORS))
             return Colors.METER_COLORS[color_index]
         elif element.display.is_ancient:
-            return self.YEAR_CONFIG['colors']['ANCIENT']
+            return self.YEAR_CONFIG.colors['ANCIENT']
 
     def _decorate_element(self, x, y, color, fill_color, focused, display_mode):
         # Lines
@@ -570,12 +577,12 @@ class Dashboard:
             part_length = 2
             self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'VALENCE ELECTRONS', section_length, 'center')
             count = 0
-            for i in range(self.VALENCE_ELECTRON_CONFIG['min_value'], self.VALENCE_ELECTRON_CONFIG['max_value'] + 1):
+            for i in range(self.VALENCE_ELECTRON_CONFIG.min_value, self.VALENCE_ELECTRON_CONFIG.max_value + 1):
                 self._set_highlight_color(
                     self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 2,
                     self.DISPLAY_CONFIG.y,
                     part_length,
-                    self.VALENCE_ELECTRON_CONFIG['colors'][i].color,
+                    self.VALENCE_ELECTRON_CONFIG.colors[i].color,
                 )
                 self._set_text(
                     self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 2,
@@ -590,12 +597,12 @@ class Dashboard:
             part_length = 3
             self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'VALENCY', section_length, 'center')
             count = 0
-            for i in range(self.VALENCY_CONFIG['min_value'], self.VALENCY_CONFIG['max_value'] + 1):
+            for i in range(self.VALENCY_CONFIG.min_value, self.VALENCY_CONFIG.max_value + 1):
                 self._set_highlight_color(
                     self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 3,
                     self.DISPLAY_CONFIG.y,
                     part_length,
-                    self.VALENCY_CONFIG['colors'][i].color,
+                    self.VALENCY_CONFIG.colors[i].color,
                 )
                 self._set_text(
                     self.DISPLAY_CONFIG.x + section_length + (count * part_length) + 3,
@@ -637,17 +644,17 @@ class Dashboard:
             section_length = int(self.DISPLAY_CONFIG.length / 2)
             self._set_text(self.DISPLAY_CONFIG.x, self.DISPLAY_CONFIG.y, 'YEAR', section_length - 9, 'center')
 
-            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length - 8, self.DISPLAY_CONFIG.y, 9, self.YEAR_CONFIG['colors']['ANCIENT'])
+            self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length - 8, self.DISPLAY_CONFIG.y, 9, self.YEAR_CONFIG.colors['ANCIENT'])
             self._set_text(self.DISPLAY_CONFIG.x + section_length - 8, self.DISPLAY_CONFIG.y, 'ANCIENT', 9, 'center')
 
             for i in range(len(Colors.METER_COLORS)):
                 self._set_highlight_color(self.DISPLAY_CONFIG.x + section_length + i + 2, self.DISPLAY_CONFIG.y, 1, Colors.METER_COLORS[i])
 
             self._set_text_color(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, 4, Colors.BLACK, False)
-            self._set_text(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG['min_value']), 4, 'left')
+            self._set_text(self.DISPLAY_CONFIG.x + section_length + 3, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG.min_value), 4, 'left')
 
             self._set_text_color(self.DISPLAY_CONFIG.x + (2 * section_length) - 5, self.DISPLAY_CONFIG.y, 4, Colors.BLACK, False)
-            self._set_text(self.DISPLAY_CONFIG.x + (2 * section_length) - 5, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG['max_value']), 4, 'left')
+            self._set_text(self.DISPLAY_CONFIG.x + (2 * section_length) - 5, self.DISPLAY_CONFIG.y, str(self.YEAR_CONFIG.max_value), 4, 'left')
         elif config.display_mode and config.display_mode.is_meter:
             section_length = int(self.DISPLAY_CONFIG.length / 2)
             self._set_text(
@@ -683,12 +690,12 @@ class Dashboard:
         lines = []
         line = ''
         for part in parts:
-            if len(line) + len(part) <= self.PANEL_CONFIG['WIDTH']:
+            if len(line) + len(part) <= self.PANEL_CONFIG.WIDTH:
                 line += part
             else:
                 lines.append(line)
                 line = part
-            if len(line) < self.PANEL_CONFIG['WIDTH']:
+            if len(line) < self.PANEL_CONFIG.WIDTH:
                 line += ' '
         lines.append(line)
         return lines
@@ -703,37 +710,37 @@ class Dashboard:
         # Top
         if config.panel and config.panel.top:
             if config.panel.top.element:
-                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], Colors.FOCUS_GOLD, True)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.element, self.PANEL_CONFIG['WIDTH'], 'center')
+                self._set_text_color(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, self.PANEL_CONFIG.WIDTH, Colors.FOCUS_GOLD, True)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, config.panel.top.element, self.PANEL_CONFIG.WIDTH, 'center')
             elif config.panel.top.family:
                 color = self.FAMILIES_CONFIG[config.panel.top.id].color
-                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.family, self.PANEL_CONFIG['WIDTH'], 'center')
+                self._set_text_color(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, self.PANEL_CONFIG.WIDTH, color, True)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, config.panel.top.family, self.PANEL_CONFIG.WIDTH, 'center')
             elif config.panel.top.shell:
                 color = self.SHELLS_CONFIG[config.panel.top.id].color
-                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.shell, self.PANEL_CONFIG['WIDTH'], 'center')
+                self._set_text_color(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, self.PANEL_CONFIG.WIDTH, color, True)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, config.panel.top.shell, self.PANEL_CONFIG.WIDTH, 'center')
 
         # List
         if config.panel.bottom and config.panel.bottom.list:
-            current_y = self.PANEL_CONFIG['LIST_POS'].y
+            current_y = self.PANEL_CONFIG.LIST_POS.y
             has_expected = False
             for pair in config.panel.bottom.list:
-                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, int(self.PANEL_CONFIG['WIDTH'] / 2), Colors.GRAY, False)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, pair.key + ':', int(self.PANEL_CONFIG['WIDTH'] / 2), 'right')
+                self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, current_y, int(self.PANEL_CONFIG.WIDTH / 2), Colors.GRAY, False)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, current_y, pair.key + ':', int(self.PANEL_CONFIG.WIDTH / 2), 'right')
 
                 value = self._get_panel_value(pair.value)
-                if len(value) + 1 > self.PANEL_CONFIG['WIDTH'] / 2:
+                if len(value) + 1 > self.PANEL_CONFIG.WIDTH / 2:
                     current_y += 1
-                    self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, self.PANEL_CONFIG['WIDTH'], Colors.WHITE, False)
-                    self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, ' ' + value, self.PANEL_CONFIG['WIDTH'], 'right')
+                    self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, current_y, self.PANEL_CONFIG.WIDTH, Colors.WHITE, False)
+                    self._set_text(self.PANEL_CONFIG.TOP_POS.x, current_y, ' ' + value, self.PANEL_CONFIG.WIDTH, 'right')
                 else:
                     color = Colors.WHITE
                     if pair.value is None:
                         color = Colors.GRAY
 
-                    self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + int(self.PANEL_CONFIG['WIDTH'] / 2), current_y, int(self.PANEL_CONFIG['WIDTH'] / 2), color, False)
-                    self._set_text(self.PANEL_CONFIG['TOP_POS'].x + int(self.PANEL_CONFIG['WIDTH'] / 2), current_y, ' ' + self._get_panel_value(pair.value), self.PANEL_CONFIG['WIDTH'] / 2, 'left')
+                    self._set_text_color(self.PANEL_CONFIG.LIST_POS.x + int(self.PANEL_CONFIG.WIDTH / 2), current_y, int(self.PANEL_CONFIG.WIDTH / 2), color, False)
+                    self._set_text(self.PANEL_CONFIG.TOP_POS.x + int(self.PANEL_CONFIG.WIDTH / 2), current_y, ' ' + self._get_panel_value(pair.value), self.PANEL_CONFIG.WIDTH / 2, 'left')
 
                     if value is not None and value.endswith(' **'):
                         has_expected = True
@@ -742,17 +749,17 @@ class Dashboard:
 
             if config.display_mode and config.display_mode.key:
                 field_index = self._get_field_index(config.display_mode.key)
-                self._set_highlight_color(self.PANEL_CONFIG['LIST_POS'].x - 1, self.PANEL_CONFIG['LIST_POS'].y + field_index, self.PANEL_CONFIG['WIDTH'] + 2, Colors.WHITE)
+                self._set_highlight_color(self.PANEL_CONFIG.LIST_POS.x - 1, self.PANEL_CONFIG.LIST_POS.y + field_index, self.PANEL_CONFIG.WIDTH + 2, Colors.WHITE)
 
             if has_expected:
-                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, '** Expected', self.PANEL_CONFIG['WIDTH'], 'right')
+                self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 1, self.PANEL_CONFIG.WIDTH, Colors.GRAY, False)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 1, '** Expected', self.PANEL_CONFIG.WIDTH, 'right')
         elif config.panel.bottom and config.panel.bottom.description:
             lines = self._get_lines_from_description(config.panel.bottom.description)
-            current_y = self.PANEL_CONFIG['LIST_POS'].y
+            current_y = self.PANEL_CONFIG.LIST_POS.y
             for line in lines:
-                self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, current_y, self.PANEL_CONFIG['WIDTH'], Colors.LIGHT_GRAY, False)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, current_y, line, self.PANEL_CONFIG['WIDTH'], 'left')
+                self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, current_y, self.PANEL_CONFIG.WIDTH, Colors.LIGHT_GRAY, False)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, current_y, line, self.PANEL_CONFIG.WIDTH, 'left')
                 current_y += 1
 
     def _populate_search_panel(self, config):
@@ -761,9 +768,9 @@ class Dashboard:
         # Top
         if config.panel and config.panel.top:
             if config.panel.top.query:
-                color = self.SEARCH_CONFIG['colors']['RESULTS'] if has_results else self.SEARCH_CONFIG['colors']['NO_RESULTS']
-                self._set_text_color(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, self.PANEL_CONFIG['WIDTH'], color, True)
-                self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['TOP_POS'].y, config.panel.top.query, self.PANEL_CONFIG['WIDTH'], 'center')
+                color = self.SEARCH_CONFIG.colors.RESULTS if has_results else self.SEARCH_CONFIG.colors.NO_RESULTS
+                self._set_text_color(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, self.PANEL_CONFIG.WIDTH, color, True)
+                self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.TOP_POS.y, config.panel.top.query, self.PANEL_CONFIG.WIDTH, 'center')
 
         # Bottom
         if has_results:
@@ -771,39 +778,39 @@ class Dashboard:
             name_offset = 5
 
             if config.panel.bottom.index is not None:
-                self._set_highlight_color(self.PANEL_CONFIG['LIST_POS'].x - 1, self.PANEL_CONFIG['LIST_POS'].y + config.panel.bottom.index, self.PANEL_CONFIG['WIDTH'] + 2, Colors.WHITE)
+                self._set_highlight_color(self.PANEL_CONFIG.LIST_POS.x - 1, self.PANEL_CONFIG.LIST_POS.y + config.panel.bottom.index, self.PANEL_CONFIG.WIDTH + 2, Colors.WHITE)
 
             for i, item in enumerate(config.panel.bottom.results):
                 is_selected = config.panel.bottom.index == i
-                selected_color = self.SEARCH_CONFIG['colors']['RESULTS_FOCUSED'] if is_selected else self.SEARCH_CONFIG['colors']['RESULTS']
+                selected_color = self.SEARCH_CONFIG.colors.RESULTS_FOCUSED if is_selected else self.SEARCH_CONFIG.colors.RESULTS
 
                 if item.type == SearchResultType.ELEMENT:
                     if item.atomic_number is not None:
-                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.atomic_number.text, 3, 'left')
+                        self._set_text(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + i, item.atomic_number.text, 3, 'left')
                         if item.atomic_number.index is not None:
-                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.atomic_number.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x + item.atomic_number.index, self.PANEL_CONFIG.LIST_POS.y + i, highlight_length, selected_color, False)
                     elif item.atomic_symbol is not None:
-                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.atomic_symbol.text, 2, 'left')
+                        self._set_text(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + i, item.atomic_symbol.text, 2, 'left')
                         if item.atomic_symbol.index is not None:
-                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.atomic_symbol.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x + item.atomic_symbol.index, self.PANEL_CONFIG.LIST_POS.y + i, highlight_length, selected_color, False)
                     if item.name:
-                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x + name_offset, self.PANEL_CONFIG['LIST_POS'].y + i, item.name.text, self.PANEL_CONFIG['WIDTH'] - name_offset, 'left')
+                        self._set_text(self.PANEL_CONFIG.LIST_POS.x + name_offset, self.PANEL_CONFIG.LIST_POS.y + i, item.name.text, self.PANEL_CONFIG.WIDTH - name_offset, 'left')
                         if item.name.index is not None:
-                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.name.index + name_offset, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x + item.name.index + name_offset, self.PANEL_CONFIG.LIST_POS.y + i, highlight_length, selected_color, False)
                 else:
                     if item.name:
-                        self._set_text(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + i, item.name.text, self.PANEL_CONFIG['WIDTH'], 'left')
+                        self._set_text(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + i, item.name.text, self.PANEL_CONFIG.WIDTH, 'left')
                         if item.name.index is not None:
-                            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x + item.name.index, self.PANEL_CONFIG['LIST_POS'].y + i, highlight_length, selected_color, False)
+                            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x + item.name.index, self.PANEL_CONFIG.LIST_POS.y + i, highlight_length, selected_color, False)
 
-            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 2, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
-            self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 2, 'Navigation:<UP|DOWN>  Select:<ENTER>', self.PANEL_CONFIG['WIDTH'], 'center')
+            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 2, self.PANEL_CONFIG.WIDTH, Colors.GRAY, False)
+            self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 2, 'Navigation:<UP|DOWN>  Select:<ENTER>', self.PANEL_CONFIG.WIDTH, 'center')
         else:
-            self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
-            self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y, 'NO RESULTS', self.PANEL_CONFIG['WIDTH'], 'center')
+            self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y, self.PANEL_CONFIG.WIDTH, Colors.GRAY, False)
+            self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.LIST_POS.y, 'NO RESULTS', self.PANEL_CONFIG.WIDTH, 'center')
 
-        self._set_text_color(self.PANEL_CONFIG['LIST_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, self.PANEL_CONFIG['WIDTH'], Colors.GRAY, False)
-        self._set_text(self.PANEL_CONFIG['TOP_POS'].x, self.PANEL_CONFIG['LIST_POS'].y + self.PANEL_CONFIG['HEIGHT'] - 1, 'Exit Search:<LEFT>', self.PANEL_CONFIG['WIDTH'], 'center')
+        self._set_text_color(self.PANEL_CONFIG.LIST_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 1, self.PANEL_CONFIG.WIDTH, Colors.GRAY, False)
+        self._set_text(self.PANEL_CONFIG.TOP_POS.x, self.PANEL_CONFIG.LIST_POS.y + self.PANEL_CONFIG.HEIGHT - 1, 'Exit Search:<LEFT>', self.PANEL_CONFIG.WIDTH, 'center')
 
     def _get_panel_value(self, value):
         if value is not None:

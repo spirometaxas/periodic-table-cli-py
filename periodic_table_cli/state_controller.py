@@ -98,10 +98,9 @@ class Layout:
         PanelItem('oxidationStates',       'Oxidation States'  ),
     ]
 
-    SearchConfig = {
-        'MAX_SEARCH_LENGTH':  36,
-        'MAX_SEARCH_RESULTS': 23,
-    }
+    class SearchConfig:
+        MAX_SEARCH_LENGTH  = 36
+        MAX_SEARCH_RESULTS = 23
 
 class FocusConfig:
 
@@ -419,7 +418,7 @@ class StateController:
                     self.search_state = None
                     return True
                 self.search_state.results = self.search_processor.query(
-                    self.search_state.query, Layout.SearchConfig['MAX_SEARCH_RESULTS'], self.data
+                    self.search_state.query, Layout.SearchConfig.MAX_SEARCH_RESULTS, self.data
                 )
                 self.search_state.index = 0
             return True
@@ -460,7 +459,7 @@ class StateController:
             self.current_focus = FocusConfig(SelectModes.SEARCH)
             self.search_state = SearchConfig('', [], 0)
 
-        if self.search_state.query and len(self.search_state.query) >= Layout.SearchConfig['MAX_SEARCH_LENGTH']:
+        if self.search_state.query and len(self.search_state.query) >= Layout.SearchConfig.MAX_SEARCH_LENGTH:
             return False
 
         # Don't allow appending multiple spaces or dashes
@@ -476,7 +475,7 @@ class StateController:
 
         self.search_state.query += key.upper()
         self.search_state.results = self.search_processor.query(
-            self.search_state.query, Layout.SearchConfig['MAX_SEARCH_RESULTS'], self.data
+            self.search_state.query, Layout.SearchConfig.MAX_SEARCH_RESULTS, self.data
         )
         self.search_state.index = 0
         return True

@@ -4,45 +4,46 @@ from utils import Utils
 from state_controller import Layout
 from tables import PERIODIC_TABLE_SMALL, PERIODIC_TABLE
 
+class Dimensions:
+
+    def __init__(self, start, vertical_offset, horizontal_offset, width):
+        self.start = start
+        self.vertical_offset = vertical_offset
+        self.horizontal_offset = horizontal_offset
+        self.width = width
+
+class Point:
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
 class ChartProcessor:
+
+    class DIMENSIONS:
+
+        SMALL    = Dimensions(Point(4, 3), 3, 4, 3)
+        STANDARD = Dimensions(Point(4, 3), 3, 6, 5)
+
 
     HIGHLIGHT = u'\u001b[7m'
     OFF = u'\u001b[0m'
 
-    DIMENSIONS = {
-        'SMALL': {
-            'START': {
-                'x': 4, 'y': 3,
-            },
-            'VERTICAL_OFFSET': 3,
-            'HORIZONTAL_OFFSET': 4,
-            'WIDTH': 3,
-        },
-        'STANDARD': {
-            'START': {
-                'x': 4, 'y': 3,
-            },
-            'VERTICAL_OFFSET': 3,
-            'HORIZONTAL_OFFSET': 6,
-            'WIDTH': 5,
-        },
-    }
-
     @staticmethod
     def _format_specific_element(element, small):
         chart = PERIODIC_TABLE_SMALL if small else PERIODIC_TABLE
-        dim = ChartProcessor.DIMENSIONS['SMALL'] if small else ChartProcessor.DIMENSIONS['STANDARD']
+        dim = ChartProcessor.DIMENSIONS.SMALL if small else ChartProcessor.DIMENSIONS.STANDARD
         lines = chart.split('\n')
-        pos = ChartProcessor._find_element(element['atomicNumber'])
+        pos = ChartProcessor._find_element(element.get('atomicNumber'))
 
-        y = dim['START']['y'] + (pos['row'] * dim['VERTICAL_OFFSET'])
-        x = dim['START']['x'] + (pos['column'] * dim['HORIZONTAL_OFFSET'])
+        y = dim.start.y + (pos['row'] * dim.vertical_offset)
+        x = dim.start.x + (pos['column'] * dim.horizontal_offset)
 
-        if Utils.is_bottom_section(element['atomicNumber']):
+        if Utils.is_bottom_section(element.get('atomicNumber')):
             y += 2
 
-        lines[y] = lines[y][:x] + ChartProcessor.HIGHLIGHT + lines[y][x:x + dim['WIDTH']] + ChartProcessor.OFF + lines[y][x + dim['WIDTH']:]
-        lines[y + 1] = lines[y + 1][:x] + ChartProcessor.HIGHLIGHT + lines[y + 1][x:x + dim['WIDTH']] + ChartProcessor.OFF + lines[y + 1][x + dim['WIDTH']:]
+        lines[y] = lines[y][:x] + ChartProcessor.HIGHLIGHT + lines[y][x:x + dim.width] + ChartProcessor.OFF + lines[y][x + dim.width:]
+        lines[y + 1] = lines[y + 1][:x] + ChartProcessor.HIGHLIGHT + lines[y + 1][x:x + dim.width] + ChartProcessor.OFF + lines[y + 1][x + dim.width:]
         
         return '\n'.join(lines)
 

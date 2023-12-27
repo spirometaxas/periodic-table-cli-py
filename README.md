@@ -24,7 +24,7 @@ $ periodic-table-cli [options]
 
 The config params are optional ([see below](https://github.com/spirometaxas/periodic-table-cli-py#options)).  
 
-Note: Can install using `pip` or `pip3`.  Supports Python 3+ and 2.7.
+Note: Can install using `pip` or `pip3`.  Supports Python 3+ and 2.7.  Zero dependencies except [windows-curses](https://pypi.org/project/windows-curses/) for Windows.
 
 ### Interactive Controls
 - **Navigation**: Use `UP` / `DOWN` / `LEFT` / `RIGHT` arrows.
@@ -248,7 +248,7 @@ $ periodic-table-cli --mode=app --name=<name>
 ## Data Sources
 Data used in the app is stored in an easy to edit [data file](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/periodic_table_cli/data.json).  The data is mostly imported from [PubChem](https://pubchem.ncbi.nlm.nih.gov/periodic-table/). 
 
-Last Updated July 2023
+Last Updated January 2024
 
 ## License
 - [MIT](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/LICENSE) &copy; [Spiro Metaxas](https://spirometaxas.com)

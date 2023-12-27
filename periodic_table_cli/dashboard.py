@@ -5,7 +5,6 @@ from tables import DASHBOARD
 from utils import Utils
 from state_controller import Layout, DisplayModes, SelectModes
 from search_processor import SearchResultType
-import os
 
 class BoardItem:
 

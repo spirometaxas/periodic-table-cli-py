@@ -6,7 +6,7 @@ from dashboard import Dashboard
 from colors import Colors
 import os
 
-DEGUG_MODE = True  # TODO: Set to False, remove unknown color logs from colors.py
+DEGUG_MODE = False
 
 class KeyMap:
     ESC       = 27

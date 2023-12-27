@@ -230,10 +230,10 @@ class StateController:
             self.current_focus = FocusConfig(SelectModes.ELEMENT, config.atomic_number)
         elif config and Utils.is_valid_element_symbol(config.symbol, data.get('elements')):
             element = Utils.get_element_by_symbol(config.symbol, data.get('elements'))
-            self.current_focus = FocusConfig(SelectModes.ELEMENT, element.atomic_number)
+            self.current_focus = FocusConfig(SelectModes.ELEMENT, element.get('atomicNumber'))
         elif config and Utils.is_valid_element_name(config.name, data.get('elements')):
             element = Utils.get_element_by_name(config.name, data.get('elements'))
-            self.current_focus = FocusConfig(SelectModes.ELEMENT, element.atomic_number)
+            self.current_focus = FocusConfig(SelectModes.ELEMENT, element.get('atomicNumber'))
         else:
             self.current_focus = FocusConfig(SelectModes.ELEMENT, 1)
 

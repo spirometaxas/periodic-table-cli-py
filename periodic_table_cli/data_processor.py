@@ -157,7 +157,7 @@ class DataProcessor:
             response += '\n Run with --verbose (-v) for more data.'
 
         if len(column_config) < len(full_column_config):
-            response += '\n\n ' + str(len(full_column_config) - len(column_config)) + ' columns omitted due to screen size constraints. Specify an element to see the full data.'
+            response += '\n\n ' + str(len(full_column_config) - len(column_config)) + ' columns omitted due to screen size constraints.  Specify an element to see the full data.'
 
         response += '\n'
 

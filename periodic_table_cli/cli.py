@@ -80,7 +80,7 @@ def print_usage():
         '   --verbose, -v          Print a complete data chart with all elements (include --mode=data)\n'\
         '\n'\
         ' Full Docs: https://spirometaxas.com/projects/periodic-table-cli\n\n'\
-        ' Last updated September 2023\n');
+        ' Last updated January 2024\n');
 
 def get_flags(params):
     return [param for param in params if param.startswith('-')]

@@ -34,6 +34,7 @@ class MODES:
     CHART = 'CHART'
 
 DATA_FILE = 'data.json'
+VERSION_FILE = 'version.txt'
 
 def print_usage():
     print('\n'\
@@ -82,6 +83,16 @@ def print_usage():
         ' Full Docs: https://spirometaxas.com/projects/periodic-table-cli\n\n'\
         ' Last updated January 2024\n');
 
+def get_version():
+    try:
+        f = open(VERSION_FILE)
+        version = f.read()
+        f.close()
+        return version.replace(' ', '').replace('\t', '').replace('\n', '')
+    except:
+        print('\n Error loading version.\n')
+        sys.exit()
+
 def get_flags(params):
     return [param for param in params if param.startswith('-')]
 
@@ -91,8 +102,11 @@ def is_small(flags):
 def is_help(flags):
     return any(flag.lower() in ('--help', '-h') for flag in flags)
 
-def is_verbose(flags):
-    return any(flag.lower() in ('--verbose', '-v') for flag in flags)
+def is_verbose(flags, mode):
+    return mode == MODES.DATA and any(flag.lower() in ('--verbose', '-v') for flag in flags)
+
+def is_version(flags, mode):
+    return mode == MODES.APP and any(flag.lower() in ('--version', '-v') for flag in flags)
 
 def get_mode(flags):
     prefix = '--mode='
@@ -163,10 +177,13 @@ def main():
         name = get_name(params)
         symbol = get_symbol(params)
         small = is_small(params)
-        verbose = is_verbose(params)
+        verbose = is_verbose(params, mode)
 
         if is_help(params):
             print_usage()
+            sys.exit()
+        elif is_version(params, mode):
+            print('\n v' + get_version() + ' (Python)\n')
             sys.exit()
         elif mode == MODES.DATA:
             data = load_data()

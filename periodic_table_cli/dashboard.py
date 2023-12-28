@@ -48,7 +48,7 @@ class ColorConfig:
     def __init__(self, color):
         self.color = color
 
-class ColorsConfig:
+class ColorsConfig(object):
 
     def __init__(self, colors):
         self.colors = colors

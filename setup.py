@@ -10,10 +10,14 @@ def get_install_requirements():
     return [ 'windows-curses' ]  # Only install for Windows
   return []
 
+def get_version():
+    with open('periodic_table_cli/version.txt', encoding='utf8') as f:
+        return f.read().replace(' ', '').replace('\t', '').replace('\n', '')
+
 setup(
   name = 'periodic-table-cli',
   packages = ['periodic_table_cli'],
-  version = '1.0.0',
+  version = get_version(),
   license='MIT',
   description = 'An interactive Periodic Table of Elements app for the console!',
   long_description_content_type='text/markdown',
@@ -21,7 +25,7 @@ setup(
   author = 'Spiro Metaxas',
   author_email = 'spirometaxas@outlook.com',
   url = 'https://spirometaxas.com/projects/periodic-table-cli/',
-  download_url = 'https://github.com/spirometaxas/periodic-table-cli-py/archive/refs/tags/v1.0.0.tar.gz',
+  download_url = 'https://github.com/spirometaxas/periodic-table-cli-py/archive/refs/tags/v2.0.0.tar.gz',
   project_urls={
     'Source Code': 'https://github.com/spirometaxas/periodic-table-cli-py',
   },

@@ -81,14 +81,15 @@ def print_usage():
         '   --verbose, -v          Print a complete data chart with all elements (include --mode=data)\n'\
         '\n'\
         ' Full Docs: https://spirometaxas.com/projects/periodic-table-cli\n\n'\
-        ' Last updated January 2024\n');
+        ' Last updated January 2024\n'\
+        ' ' + get_version() + '\n')
 
 def get_version():
     try:
         f = open(VERSION_FILE)
         version = f.read()
         f.close()
-        return version.replace(' ', '').replace('\t', '').replace('\n', '')
+        return 'v' + version.replace(' ', '').replace('\t', '').replace('\n', '') + ' (Python)'
     except:
         print('\n Error loading version.\n')
         sys.exit()
@@ -183,7 +184,7 @@ def main():
             print_usage()
             sys.exit()
         elif is_version(params, mode):
-            print('\n v' + get_version() + ' (Python)\n')
+            print('\n ' + get_version() + '\n')
             sys.exit()
         elif mode == MODES.DATA:
             data = load_data()

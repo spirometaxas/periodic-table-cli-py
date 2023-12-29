@@ -34,7 +34,7 @@ Note: Can install using `pip` or `pip3`.  Supports Python 3+ and 2.7.  Zero depe
 
 Add the `--help` flag for more info.
 
-Note: Be sure to run in terminals that support 256 colors.
+Note: Be sure to run in terminals that support 256 colors.  Minimum required terminal screen dimensions: 156 columns x 46 rows.
 
 ## Features
 ### Browse

@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 
 def get_readme():
@@ -16,7 +16,7 @@ def get_version():
 
 setup(
   name = 'periodic-table-cli',
-  packages = ['periodic_table_cli'],
+  packages = find_packages(),
   version = get_version(),
   license='MIT',
   description = 'An interactive Periodic Table of Elements app for the console!',
@@ -25,7 +25,7 @@ setup(
   author = 'Spiro Metaxas',
   author_email = 'spirometaxas@outlook.com',
   url = 'https://spirometaxas.com/projects/periodic-table-cli/',
-  download_url = 'https://github.com/spirometaxas/periodic-table-cli-py/archive/refs/tags/v2.0.0.tar.gz',
+  download_url = 'https://github.com/spirometaxas/periodic-table-cli-py/archive/refs/tags/v' + get_version() + '.tar.gz',
   project_urls={
     'Source Code': 'https://github.com/spirometaxas/periodic-table-cli-py',
   },

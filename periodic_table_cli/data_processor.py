@@ -26,10 +26,10 @@ class DataProcessor:
         ColumnItem('family',                'Family',                 [ '', '', 'Family' ]                 ),
         ColumnItem('standardState',         'State',                  [ '', '', 'State' ]                  ),
         ColumnItem('atomicMass',            'Atomic Mass',            [ '', 'Atomic Mass', '(u)' ]         ),
-        ColumnItem('numberofProtons',       'Protons',                [ '', 'Pro-', 'tons' ]               ),
+        ColumnItem('numberOfProtons',       'Protons',                [ '', 'Pro-', 'tons' ]               ),
         ColumnItem('numberOfNeutrons',      'Neutrons',               [ '', 'Neut-', 'rons' ]              ),
-        ColumnItem('numberofElectrons',     'Electrons',              [ '', 'Elect-', 'rons' ]             ),
-        ColumnItem('numberofValence',       'Valence Electrons',      [ 'Valence', 'Elect-', 'rons' ]      ),
+        ColumnItem('numberOfElectrons',     'Electrons',              [ '', 'Elect-', 'rons' ]             ),
+        ColumnItem('numberOfValence',       'Valence Electrons',      [ 'Valence', 'Elect-', 'rons' ]      ),
         ColumnItem('valency',               'Valency',                [ '', '', 'Valency' ]                ),
         ColumnItem('atomicRadius',          'Atomic Radius',          [ 'Atomic', 'Radius', '(pm)' ]       ),
         ColumnItem('density',               'Density',                [ '', 'Density', '(g/cm^3)' ]        ),
@@ -157,7 +157,7 @@ class DataProcessor:
             response += '\n Run with --verbose (-v) for more data.'
 
         if len(column_config) < len(full_column_config):
-            response += '\n\n ' + str(len(full_column_config) - len(column_config)) + ' columns omitted due to screen size constraints. Specify an element to see the full data.'
+            response += '\n\n ' + str(len(full_column_config) - len(column_config)) + ' columns omitted due to screen size constraints.  Specify an element to see the full data.'
 
         response += '\n'
 

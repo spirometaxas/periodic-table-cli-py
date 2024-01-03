@@ -2,8 +2,10 @@ from setuptools import setup, find_packages
 import os
 
 def get_readme():
-    with open('README.md', encoding='utf8') as f:
-        return f.read()
+  f = open('README.md')
+  readme = f.read()
+  f.close()
+  return readme
 
 def get_install_requirements():
   if os.name == 'nt':
@@ -11,8 +13,10 @@ def get_install_requirements():
   return []
 
 def get_version():
-    with open('periodic_table_cli/version.txt', encoding='utf8') as f:
-        return f.read().replace(' ', '').replace('\t', '').replace('\n', '')
+  f = open('periodic_table_cli/version.txt')
+  version = f.read()
+  f.close()
+  return version
 
 setup(
   name = 'periodic-table-cli',

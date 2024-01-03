@@ -1,9 +1,9 @@
 import sys
 import curses
 import traceback
-from state_controller import StateController
-from dashboard import Dashboard
-from colors import Colors
+from .state_controller import StateController
+from .dashboard import Dashboard
+from .colors import Colors
 import os
 
 DEGUG_MODE = False

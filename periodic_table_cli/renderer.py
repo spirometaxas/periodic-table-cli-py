@@ -1,6 +1,6 @@
 import curses
 import os
-from colors import Colors
+from .colors import Colors
 
 class Renderer:
 
@@ -12,9 +12,9 @@ class Renderer:
             for c in range(len(full_board[r])):
                 color = curses.color_pair(Colors.get_color_pair_id(full_board[r][c].config.foreground_color, full_board[r][c].config.background_color))
                 if Renderer._is_bold(full_board[r][c].config):
-                    window.addstr(full_board[r][c].character.encode('utf-8'), color | curses.A_BOLD)
+                    window.addstr(full_board[r][c].character, color | curses.A_BOLD)
                 else:
-                    window.addstr(full_board[r][c].character.encode('utf-8'), color)
+                    window.addstr(full_board[r][c].character, color)
 
     @staticmethod
     def generate_optimized(full_board, window):
@@ -31,18 +31,18 @@ class Renderer:
                     block += full_board[r][c].character
                 else:
                     if current_bold:
-                        window.addstr(block.encode('utf-8'), current_color | curses.A_BOLD)
+                        window.addstr(block, current_color | curses.A_BOLD)
                     else:
-                        window.addstr(block.encode('utf-8'), current_color)
+                        window.addstr(block, current_color)
                     current_color = color
                     current_bold = is_bold
                     block = '' + full_board[r][c].character
 
             # Write last part of row and reset for next row
             if current_bold:
-                window.addstr(block.encode('utf-8'), current_color | curses.A_BOLD)
+                window.addstr(block, current_color | curses.A_BOLD)
             else:
-                window.addstr(block.encode('utf-8'), current_color)
+                window.addstr(block, current_color)
 
     @staticmethod
     def _is_bold(config):

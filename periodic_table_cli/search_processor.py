@@ -1,4 +1,4 @@
-from utils import Utils
+from .utils import Utils
 from functools import cmp_to_key
 
 class SearchResultType:

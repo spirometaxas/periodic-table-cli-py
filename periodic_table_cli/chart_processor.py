@@ -1,8 +1,8 @@
 import os
 import sys
-from utils import Utils
-from state_controller import Layout
-from tables import PERIODIC_TABLE_SMALL, PERIODIC_TABLE
+from .utils import Utils
+from .state_controller import Layout
+from .tables import PERIODIC_TABLE_SMALL, PERIODIC_TABLE
 
 class Dimensions:
 
@@ -26,8 +26,8 @@ class ChartProcessor:
         STANDARD = Dimensions(Point(4, 3), 3, 6, 5)
 
 
-    HIGHLIGHT = u'\u001b[7m'
-    OFF = u'\u001b[0m'
+    HIGHLIGHT = '\u001b[7m'
+    OFF = '\u001b[0m'
 
     @staticmethod
     def _format_specific_element(element, small):

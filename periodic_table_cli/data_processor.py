@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import os
 import sys
-import subprocess
-from utils import Utils
+from .utils import Utils
 
 class BoxCharacters:
     VERTICAL   = '│'
@@ -241,11 +238,7 @@ class DataProcessor:
         # Element was not specified, so display the full chart
         width = None
         if sys.stdout.isatty():
-            if sys.version_info[0] > 3 or (sys.version_info[0] == 3 and sys.version_info[1] >= 3):
-                # Available in Python 3.3+
-                width = os.get_terminal_size().columns
-            else:
-                width = int(subprocess.check_output(['stty', 'size']).split()[1])
+            width = os.get_terminal_size().columns
 
         verbose = config.verbose or False
         return DataProcessor._format_all_elements(data, verbose, width)

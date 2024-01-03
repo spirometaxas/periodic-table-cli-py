@@ -6,7 +6,7 @@ An interactive [Periodic Table of Elements](https://en.wikipedia.org/wiki/Period
 
 Why the console?  Because it's the *cool* way.
 
-![What periodic-table-cli prints to the console](https://raw.githubusercontent.com/spirometaxas/periodic-table-cli/main/img/animated.gif)
+![What periodic-table-cli prints to the console](https://raw.githubusercontent.com/spirometaxas/periodic-table-cli-py/main/img/animated.gif)
 
 [![pypi version](https://img.shields.io/pypi/v/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)
 [![status](https://img.shields.io/pypi/status/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)
@@ -24,7 +24,7 @@ $ periodic-table-cli [options]
 
 The config params are optional ([see below](https://github.com/spirometaxas/periodic-table-cli-py#options)).  
 
-Note: Can install using `pip` or `pip3`.  Supports Python 3+ and 2.7.  Zero dependencies except [windows-curses](https://pypi.org/project/windows-curses/) for Windows.
+Note: Supports Python 3.8+.  Zero dependencies except [windows-curses](https://pypi.org/project/windows-curses/) for Windows.
 
 ### Interactive Controls
 - **Navigation**: Use `UP` / `DOWN` / `LEFT` / `RIGHT` arrows.

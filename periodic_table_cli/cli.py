@@ -1,20 +1,13 @@
-# -*- coding: utf-8 -*-
-
 import sys
 import os
 import json
 import curses
-
-# Needed for local imports
-current_dir = os.path.join(os.path.dirname(__file__), '')
-sys.path.append(current_dir)
-
-from data_processor import DataProcessor
-from chart_processor import ChartProcessor
-from app import App
+from .data_processor import DataProcessor
+from .chart_processor import ChartProcessor
+from .app import App
 import locale
 
-class AppConfig(object):
+class AppConfig:
 
     def __init__(self, atomic_number, symbol, name):
         self.atomic_number = atomic_number
@@ -24,13 +17,13 @@ class AppConfig(object):
 class DataConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, verbose):
-        super(DataConfig, self).__init__(atomic_number, symbol, name)
+        super().__init__(atomic_number, symbol, name)
         self.verbose = verbose
 
 class ChartConfig(AppConfig):
 
     def __init__(self, atomic_number, symbol, name, small):
-        super(ChartConfig, self).__init__(atomic_number, symbol, name)
+        super().__init__(atomic_number, symbol, name)
         self.small = small
 
 class MODES:
@@ -90,6 +83,7 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
+    current_dir = os.path.join(os.path.dirname(__file__), '')
     version_file_path = os.path.join(current_dir, VERSION_FILE)
     try:
         f = open(version_file_path)
@@ -157,6 +151,7 @@ def get_symbol(flags):
     return None
 
 def load_data():
+    current_dir = os.path.join(os.path.dirname(__file__), '')
     data_file_path = os.path.join(current_dir, DATA_FILE)
     try:
         f = open(data_file_path)

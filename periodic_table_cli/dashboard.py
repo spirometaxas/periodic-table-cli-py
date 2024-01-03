@@ -1,10 +1,10 @@
 import curses
-from colors import Colors
-from renderer import Renderer
-from tables import DASHBOARD
-from utils import Utils
-from state_controller import Layout, DisplayModes, SelectModes
-from search_processor import SearchResultType
+from .colors import Colors
+from .renderer import Renderer
+from .tables import DASHBOARD
+from .utils import Utils
+from .state_controller import Layout, DisplayModes, SelectModes
+from .search_processor import SearchResultType
 
 class BoardItem:
 
@@ -25,7 +25,7 @@ class BoardItemConfig:
         self.background_color = None
         self.bold = False
 
-class Point(object):
+class Point:
 
     def __init__(self, x, y):
         self.x = x
@@ -34,13 +34,13 @@ class Point(object):
 class PointLength(Point):
 
     def __init__(self, x, y, length):
-        super(PointLength, self).__init__(x, y)
+        super().__init__(x, y)
         self.length = length
 
 class PointLengthColor(PointLength):
 
     def __init__(self, x, y, length, color):
-        super(PointLengthColor, self).__init__(x, y, length)
+        super().__init__(x, y, length)
         self.color = color
 
 class ColorConfig:
@@ -48,7 +48,7 @@ class ColorConfig:
     def __init__(self, color):
         self.color = color
 
-class ColorsConfig(object):
+class ColorsConfig:
 
     def __init__(self, colors):
         self.colors = colors
@@ -56,7 +56,7 @@ class ColorsConfig(object):
 class MinMaxColors(ColorsConfig):
 
     def __init__(self, min_value, max_value, colors):
-        super(MinMaxColors, self).__init__(colors)
+        super().__init__(colors)
         self.min_value = min_value
         self.max_value = max_value
 

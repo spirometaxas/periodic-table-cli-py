@@ -1,5 +1,5 @@
-from utils import Utils
-from search_processor import SearchProcessor, SearchResultType
+from .utils import Utils
+from .search_processor import SearchProcessor, SearchResultType
 
 class SelectModes:
     ELEMENT = 'element'

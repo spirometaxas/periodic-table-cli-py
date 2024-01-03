@@ -4,6 +4,11 @@ import sys
 import os
 import json
 import curses
+
+# Needed for local imports
+current_dir = os.path.join(os.path.dirname(__file__), '')
+sys.path.append(current_dir)
+
 from data_processor import DataProcessor
 from chart_processor import ChartProcessor
 from app import App
@@ -85,8 +90,9 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
+    version_file_path = os.path.join(current_dir, VERSION_FILE)
     try:
-        f = open(VERSION_FILE)
+        f = open(version_file_path)
         version = f.read()
         f.close()
         return 'v' + version.replace(' ', '').replace('\t', '').replace('\n', '') + ' (Python)'
@@ -151,8 +157,9 @@ def get_symbol(flags):
     return None
 
 def load_data():
+    data_file_path = os.path.join(current_dir, DATA_FILE)
     try:
-        f = open(DATA_FILE)
+        f = open(data_file_path)
         data = json.load(f)
         f.close()
         return data
@@ -203,5 +210,5 @@ def main():
     app = App(AppConfig(atomic_number, symbol, name), data)
     curses.wrapper(app.start)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

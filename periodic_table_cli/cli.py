@@ -6,6 +6,7 @@ from .data_processor import DataProcessor
 from .chart_processor import ChartProcessor
 from .app import App
 import locale
+import importlib.metadata
 
 class AppConfig:
 
@@ -32,7 +33,6 @@ class MODES:
     CHART = 'CHART'
 
 DATA_FILE = 'data.json'
-VERSION_FILE = 'version.txt'
 
 def print_usage():
     print('\n'\
@@ -83,16 +83,7 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
-    current_dir = os.path.join(os.path.dirname(__file__), '')
-    version_file_path = os.path.join(current_dir, VERSION_FILE)
-    try:
-        f = open(version_file_path)
-        version = f.read()
-        f.close()
-        return 'v' + version.replace(' ', '').replace('\t', '').replace('\n', '') + ' (Python)'
-    except:
-        print('\n Error loading version.\n')
-        sys.exit()
+    return 'v' + importlib.metadata.version('periodic-table-cli') + ' (Python)'
 
 def get_flags(params):
     return [param for param in params if param.startswith('-')]

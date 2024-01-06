@@ -6,7 +6,7 @@ An interactive [Periodic Table of Elements](https://en.wikipedia.org/wiki/Period
 
 Why the console?  Because it's the *cool* way.
 
-![What periodic-table-cli prints to the console](https://raw.githubusercontent.com/spirometaxas/periodic-table-cli-py/main/img/animated_lite.gif)
+![What periodic-table-cli prints to the console](https://raw.githubusercontent.com/spirometaxas/periodic-table-cli-py/main/img/animated_9mb.gif)
 
 [![pypi version](https://img.shields.io/pypi/v/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)
 [![status](https://img.shields.io/pypi/status/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)

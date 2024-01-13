@@ -8,10 +8,10 @@ Why the console?  Because it's the *cool* way.
 
 ![What periodic-table-cli prints to the console](https://raw.githubusercontent.com/spirometaxas/periodic-table-cli-py/main/img/animated_5mb.gif)
 
-[![pypi version](https://img.shields.io/pypi/v/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)
-[![status](https://img.shields.io/pypi/status/periodic-table-cli)](https://pypi.org/project/periodic-table-cli/)
+[![pypi version](https://img.shields.io/pypi/v/periodic-table-cli.svg)](https://pypi.org/project/periodic-table-cli/)
+[![status](https://img.shields.io/pypi/status/periodic-table-cli.svg)](https://pypi.org/project/periodic-table-cli/)
 [![downloads](https://static.pepy.tech/personalized-badge/periodic-table-cli?period=total&units=abbreviation&left_color=grey&right_color=green&left_text=downloads)](https://www.pepy.tech/projects/periodic-table-cli)
-[![license](https://img.shields.io/pypi/l/periodic-table-cli)](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/LICENSE)
+[![license](https://img.shields.io/pypi/l/periodic-table-cli.svg)](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/LICENSE)
 
 Also available for [NodeJS](https://www.npmjs.com/package/periodic-table-cli).  View [Homepage](https://spirometaxas.com/projects/periodic-table-cli).
 

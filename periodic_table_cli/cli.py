@@ -82,7 +82,7 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
-    return 'v2.0.5 (Python)'
+    return 'v2.0.6 (Python)'
 
 def get_flags(params):
     return [param for param in params if param.startswith('-')]

@@ -6,7 +6,6 @@ from .data_processor import DataProcessor
 from .chart_processor import ChartProcessor
 from .app import App
 import locale
-import importlib.metadata
 
 class AppConfig:
 
@@ -83,7 +82,7 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
-    return 'v' + importlib.metadata.version('periodic-table-cli') + ' (Python)'
+    return 'v2.0.5 (Python)'
 
 def get_flags(params):
     return [param for param in params if param.startswith('-')]

@@ -6,7 +6,6 @@ from .data_processor import DataProcessor
 from .chart_processor import ChartProcessor
 from .app import App
 import locale
-import importlib.metadata
 
 class AppConfig:
 
@@ -83,7 +82,7 @@ def print_usage():
         ' ' + get_version() + '\n')
 
 def get_version():
-    return 'v' + importlib.metadata.version('periodic-table-cli') + ' (Python)'
+    return 'v2.0.5 (Python)'
 
 def get_flags(params):
     return [param for param in params if param.startswith('-')]
@@ -153,6 +152,36 @@ def load_data():
         print('\n Error loading data file.\n')
         sys.exit()
 
+def _wrapper(func):
+    # Using workaround to address windows-curses bug on Python 3.12
+    # More info: https://github.com/zephyrproject-rtos/windows-curses/issues/50
+    if os.name == 'nt' and sys.version_info[0] == 3 and sys.version_info[1] >= 12:
+        stdscr = None
+        try:
+            import _curses
+            # This crashes on Python 3.12.
+            # setupterm(term=_os.environ.get("TERM", "unknown"),
+            # fd=_sys.__stdout__.fileno())
+            stdscr = _curses.initscr()
+            for key, value in _curses.__dict__.items():
+                if key[0:4] == 'ACS_' or key in ('LINES', 'COLS'):
+                    setattr(curses, key, value)
+
+            curses.noecho()
+            curses.cbreak()
+            
+            if stdscr is not None:
+                stdscr.keypad(True)
+                func(stdscr)
+        finally:
+            if stdscr is not None:
+                stdscr.keypad(False)
+            curses.nocbreak()
+            curses.echo()
+            curses.endwin()
+    else:
+        curses.wrapper(func)
+
 def main():
     os.system('')  # Enable ANSI escape sequences on Windows
     locale.setlocale(locale.LC_ALL, '')
@@ -194,7 +223,7 @@ def main():
 
     data = load_data()
     app = App(AppConfig(atomic_number, symbol, name), data)
-    curses.wrapper(app.start)
+    _wrapper(app.start)
 
 if __name__ == '__main__':
     main()

@@ -6,6 +6,10 @@ from .dashboard import Dashboard
 from .colors import Colors
 import os
 
+class MinimumSupportedDimensions:
+    ROWS    = 46
+    COLUMNS = 156
+
 DEGUG_MODE = False
 
 class KeyMap:
@@ -23,6 +27,11 @@ class KeyMap:
     ]
     NUMBERS = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ]
     SPECIAL_CHARACTERS = [ '-', ' ' ]
+
+    COMMA        = 44
+    PERIOD       = 46
+    LEFT_CARROT  = 60
+    RIGHT_CARROT = 62
 
 class App:
 
@@ -62,12 +71,12 @@ class App:
                 curses.flushinp()
 
                 if key == curses.KEY_RESIZE:
-                    curses.resize_term(0, 0)
                     curses.curs_set(0)
+                    self.dashboard.update_scrolling_on_resize()
                     handled = True
                     full = True
                 elif key == KeyMap.ESC:
-                    self.exit()
+                    self.exit(window)
                 elif key == curses.KEY_UP:
                     handled = self.state_controller.process_up()
                 elif key == curses.KEY_DOWN:
@@ -86,16 +95,24 @@ class App:
                     handled = self.state_controller.process_backspace()
                 elif key_char in KeyMap.LETTERS or key_char in KeyMap.NUMBERS or key_char in KeyMap.SPECIAL_CHARACTERS:
                     handled = self.state_controller.process_search_input(key_char)
+                elif key == KeyMap.COMMA:
+                    handled = self.dashboard.scroll_up()
+                elif key == KeyMap.PERIOD:
+                    handled = self.dashboard.scroll_down()
+                elif key == KeyMap.LEFT_CARROT:
+                    handled = self.dashboard.scroll_left()
+                elif key == KeyMap.RIGHT_CARROT:
+                    handled = self.dashboard.scroll_right()
 
                 if handled:
                     self._draw(window, full)
             except KeyboardInterrupt:
-                self.exit()  # CTRL-C
+                self.exit(window)  # CTRL-C
             except Exception as e:
                 if DEGUG_MODE:
-                    self.exit(traceback.format_exc())
+                    self.exit(window, traceback.format_exc())
                 else:
-                    self.exit('An error occurred, exiting.')
+                    self.exit(window, 'An error occurred, exiting.')
 
     def _get_key_char(self, key):
         try:
@@ -103,7 +120,16 @@ class App:
         except:
             return None
 
-    def exit(self, message=None):
+    def exit(self, window, message=None):
+        full_rows, full_columns = window.getmaxyx()
         if message:
             print(message)
+        elif full_rows < MinimumSupportedDimensions.ROWS or full_columns < MinimumSupportedDimensions.COLUMNS:
+            print('\n' +
+                ' Warning: Current screen dimensions are smaller than minimum supported dimensions, and some screen components may have been cut off.\n' +
+                ' To fix this, either make the screen bigger or use scrolling to pan across the screen:\n' +
+                '   - Use COMMA (,) to scroll up\n' +
+                '   - Use PERIOD (.) to scroll down\n' +
+                '   - Use LEFT CARROT (<) to scroll left\n' +
+                '   - Use RIGHT CARROT (>) to scroll right\n')
         sys.exit()

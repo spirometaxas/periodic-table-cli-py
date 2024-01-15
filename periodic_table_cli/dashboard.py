@@ -216,6 +216,7 @@ class Dashboard:
     def __init__(self, data):
         self.data = data
         self.board = self._parse_board()
+        self.scrolling = Point(0, 0)
         self._initDataOnBoard()
         self._save_board()
 
@@ -849,9 +850,45 @@ class Dashboard:
                 if full_rows > len(self.board):
                     r_offset = int((full_rows - len(self.board)) * self.VERTICAL_RATIO)
 
-                full_board[r_offset + r][c_offset + c] = self.board[r][c]
+                full_board[r_offset + r][c_offset + c] = self.board[r + self.scrolling.y][c + self.scrolling.x]
 
         return full_board
+
+    def scroll_up(self):
+        full_rows = self.window.getmaxyx()[0]
+        if full_rows < len(self.board) and self.scrolling.y > 0:
+            self.scrolling.y -= 1
+            return True
+        return False
+
+    def scroll_down(self):
+        full_rows = self.window.getmaxyx()[0]
+        if full_rows < len(self.board) and self.scrolling.y + full_rows < len(self.board):
+            self.scrolling.y += 1
+            return True
+        return False
+
+    def scroll_left(self):
+        full_columns = self.window.getmaxyx()[1]
+        if full_columns < len(self.board[0]) and self.scrolling.x > 0:
+            self.scrolling.x -= 1
+            return True
+        return False
+
+    def scroll_right(self):
+        full_columns = self.window.getmaxyx()[1]
+        if full_columns < len(self.board[0]) and self.scrolling.x + full_columns < len(self.board[0]):
+            self.scrolling.x += 1
+            return True
+        return False
+
+    def update_scrolling_on_resize(self):
+        full_rows, full_columns = self.window.getmaxyx()
+        if self.scrolling.y + full_rows > len(self.board):
+            self.scrolling.y = max(len(self.board) - full_rows, 0)
+
+        if self.scrolling.x + full_columns > len(self.board[0]):
+            self.scrolling.x = max(len(self.board[0]) - full_columns, 0)
 
     def _draw(self):
         full_board = self._get_full_screen_board()

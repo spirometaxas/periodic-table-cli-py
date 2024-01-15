@@ -34,7 +34,9 @@ Note: Supports Python 3.8+.  Zero dependencies except [windows-curses](https://p
 
 Add the `--help` flag for more info.
 
-Note: Be sure to run in terminals that support 256 colors.  Minimum required terminal screen dimensions: 156 columns x 46 rows.
+Note:
+- Be sure to run in terminals that support 256 colors.
+- Minimum required terminal screen dimensions: 156 columns x 46 rows.  [See scrolling](https://github.com/spirometaxas/periodic-table-cli-py#scrolling) for more info. 
 
 ## Features
 ### Browse
@@ -244,6 +246,14 @@ $ periodic-table-cli --mode=app --atomic-number=<number>
 $ periodic-table-cli --mode=app --symbol=<symbol>
 $ periodic-table-cli --mode=app --name=<name>
 ```
+
+### Scrolling
+The minimum required terminal screen dimensions are 156 columns x 46 rows.  When using a smaller screen, some components may be cut off.  To fix this, either make the screen bigger or use scrolling to pan across the screen:
+
+- Use `COMMA` (`,`) to scroll up.
+- Use `PERIOD` (`.`) to scroll down.
+- Use `LEFT CARROT` (`<`) to scroll left.
+- Use `RIGHT CARROT` (`>`) to scroll right.
 
 ## Data Sources
 Data used in the app is stored in an easy to edit [data file](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/periodic_table_cli/data.json).  The data is mostly imported from [PubChem](https://pubchem.ncbi.nlm.nih.gov/periodic-table/). 

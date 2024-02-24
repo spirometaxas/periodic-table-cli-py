@@ -258,7 +258,7 @@ The minimum required terminal screen dimensions are 156 columns x 46 rows.  When
 ## Data Sources
 Data used in the app is stored in an easy to edit [data file](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/periodic_table_cli/data.json).  The data is mostly imported from [PubChem](https://pubchem.ncbi.nlm.nih.gov/periodic-table/). 
 
-Last Updated January 2024
+Last Updated February 2024
 
 ## License
 - [MIT](https://github.com/spirometaxas/periodic-table-cli-py/blob/main/LICENSE) &copy; [Spiro Metaxas](https://spirometaxas.com)

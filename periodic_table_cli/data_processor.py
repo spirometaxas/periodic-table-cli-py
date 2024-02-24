@@ -29,7 +29,7 @@ class DataProcessor:
         ColumnItem('numberOfValence',       'Valence Electrons',      [ 'Valence', 'Elect-', 'rons' ]      ),
         ColumnItem('valency',               'Valency',                [ '', '', 'Valency' ]                ),
         ColumnItem('atomicRadius',          'Atomic Radius',          [ 'Atomic', 'Radius', '(pm)' ]       ),
-        ColumnItem('density',               'Density',                [ '', 'Density', '(g/cm^3)' ]        ),
+        ColumnItem('density',               'Density',                [ '', 'Density', '(g/cm³)' ]         ),
         ColumnItem('electronegativity',     'Electronegativity',      [ '', 'Electro-', 'negativity' ]     ),
         ColumnItem('ionizationEnergy',      'Ioization Energy',       [ 'Ionization', 'Energy', '(eV)' ]   ),
         ColumnItem('electronAffinity',      'Electron Affinity',      [ 'Electron', 'Affinity', '(eV)' ]   ),
@@ -175,7 +175,7 @@ class DataProcessor:
             elif key == 'atomicRadius':
                 return value.replace(' pm', '')
             elif key == 'density':
-                return value.replace(' g/cm^3', '')
+                return value.replace(' g/cm³', '')
             elif key in ('ionizationEnergy', 'electronAffinity'):
                 return value.replace(' eV', '')
             elif key in ('meltingPoint', 'boilingPoint'):

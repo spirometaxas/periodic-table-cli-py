@@ -255,7 +255,7 @@ class StateController:
             'numberOfValence': (lambda v: Utils.parse_number(v)),
             'valency': (lambda v: Utils.parse_number(v)),
             'atomicRadius': (lambda v: Utils.parse_number(v, len(' pm'))),
-            'density': (lambda v: Utils.parse_number(v, len(' g/cm^3'))),
+            'density': (lambda v: Utils.parse_number(v, len(' g/cm³'))),
             'electronegativity': (lambda v: Utils.parse_number(v)),
             'ionizationEnergy': (lambda v: Utils.parse_number(v, len(' eV'))),
             'electronAffinity': (lambda v: Utils.parse_number(v, len(' eV'))),

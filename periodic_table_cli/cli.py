@@ -144,7 +144,7 @@ def load_data():
     current_dir = os.path.join(os.path.dirname(__file__), '')
     data_file_path = os.path.join(current_dir, DATA_FILE)
     try:
-        f = open(data_file_path)
+        f = open(data_file_path, encoding='utf-8')
         data = json.load(f)
         f.close()
         return data

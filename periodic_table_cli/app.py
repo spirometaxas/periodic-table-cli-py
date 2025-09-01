@@ -55,8 +55,12 @@ class App:
         window.move(0, 0)
 
     def start(self, window):
+        try:
+            Colors.init_colors()
+        except:
+            self.exit(window, '\n Error: Interactive mode is only supported on terminals that support 256 colors.\n')
+
         curses.curs_set(0)
-        Colors.init_colors()
         self.dashboard.set_window(window)
         self._draw(window, True)
         self._handle_keys(window)

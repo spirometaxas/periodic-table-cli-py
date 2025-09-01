@@ -152,7 +152,29 @@ def load_data():
         print('\n Error loading data file.\n')
         sys.exit()
 
+def setup_terminal_colors():
+    # Attempt to set 256 colors for terminals that may be misconfired 
+    # or when running over ssh
+    term = os.environ.get('TERM', '')
+    minimal_terms = ('', 'dumb', 'unknown')
+
+    upgrade_map = {
+        'xterm':  'xterm-256color',
+        'tmux':   'tmux-256color',
+        'screen': 'screen-256color',
+        'putty':  'putty-256color',
+    }
+
+    # Force xterm-256color if TERM is minimal
+    if term in minimal_terms:
+        os.environ['TERM'] = 'xterm-256color'
+    elif term in upgrade_map:
+        os.environ['TERM'] = upgrade_map[term]
+    # else: leave TERM unchanged
+
 def _wrapper(func):
+    setup_terminal_colors()
+    
     # Using workaround to address windows-curses bug on Python 3.12
     # More info: https://github.com/zephyrproject-rtos/windows-curses/issues/50
     if os.name == 'nt' and sys.version_info[0] == 3 and sys.version_info[1] >= 12:

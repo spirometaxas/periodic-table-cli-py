@@ -16,15 +16,27 @@ Why the console?  Because it's the *cool* way.
 Also available for [NodeJS](https://www.npmjs.com/package/periodic-table-cli).  View [Homepage](https://spirometaxas.com/projects/periodic-table-cli).
 
 ## Usage
+### Run via `pip`:
 ```
 $ pip install periodic-table-cli
 $ periodic-table-cli
 $ periodic-table-cli [options]
 ```
+Note: Supports Python 3.8+.  Zero dependencies except [windows-curses](https://pypi.org/project/windows-curses/) for Windows.
+
+### Run via `Homebrew`:
+```
+$ brew tap spirometaxas/tap
+$ brew install periodic-table-cli
+```
+or in one line:
+```
+$ brew install spirometaxas/tap/periodic-table-cli
+```
+Note: Installs Python 3.12 as a dependency.  Formula [here](https://github.com/spirometaxas/homebrew-tap/blob/main/Formula/periodic-table-cli.rb).
 
 The config params are optional ([see below](https://github.com/spirometaxas/periodic-table-cli-py#options)).  
 
-Note: Supports Python 3.8+.  Zero dependencies except [windows-curses](https://pypi.org/project/windows-curses/) for Windows.
 
 ### Interactive Controls
 - **Navigation**: Use `UP` / `DOWN` / `LEFT` / `RIGHT` arrows.

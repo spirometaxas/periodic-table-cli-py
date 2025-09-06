@@ -28,10 +28,14 @@ Note: Supports Python 3.8+.  Zero dependencies except [windows-curses](https://p
 ```
 $ brew tap spirometaxas/tap
 $ brew install periodic-table-cli
+$ periodic-table-cli
+$ periodic-table-cli [options]
 ```
-or in one line:
+or with one-line install:
 ```
 $ brew install spirometaxas/tap/periodic-table-cli
+$ periodic-table-cli
+$ periodic-table-cli [options]
 ```
 Note: Installs Python 3.12 as a dependency.  Formula [here](https://github.com/spirometaxas/homebrew-tap/blob/main/Formula/periodic-table-cli.rb).
 

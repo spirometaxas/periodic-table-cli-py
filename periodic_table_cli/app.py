@@ -55,8 +55,12 @@ class App:
         window.move(0, 0)
 
     def start(self, window):
+        try:
+            Colors.init_colors()
+        except:
+            self.exit(window, '\n Error: Interactive mode is only supported on terminals that support 256 colors.\n')
+
         curses.curs_set(0)
-        Colors.init_colors()
         self.dashboard.set_window(window)
         self._draw(window, True)
         self._handle_keys(window)
@@ -123,9 +127,9 @@ class App:
     def exit(self, window, message=None):
         full_rows, full_columns = window.getmaxyx()
         if message:
-            print(message)
+            sys.exit(message)
         elif full_rows < MinimumSupportedDimensions.ROWS or full_columns < MinimumSupportedDimensions.COLUMNS:
-            print('\n' +
+            sys.exit('\n' +
                 ' Tip: Current screen dimensions are smaller than minimum supported dimensions, and some screen components may have been cut off.\n' +
                 ' To fix this, either make the screen bigger or use scrolling to pan across the screen:\n' +
                 '   - Use COMMA (,) to scroll up\n' +

@@ -52,6 +52,7 @@ class App:
     def _clear_screen(self, window, full):
         if full:
             window.clear()
+            window.bkgd(' ', curses.color_pair(Colors.get_color_pair_id(Colors.WHITE.FG, Colors.DEEP_BLACK.BG)))
         window.move(0, 0)
 
     def start(self, window):

@@ -16,6 +16,7 @@ class Color:
 
 class Colors:
     BLACK       = Color({ 'ANSI':   0, 'R':   0, 'G':   0, 'B':   0 })  # Use default black
+    DEEP_BLACK  = Color({ 'ANSI':  16, 'R':   0, 'G':   0, 'B':   0 })
     WHITE       = Color({ 'ANSI': 255, 'R': 238, 'G': 238, 'B': 238 })
     GRAY        = Color({ 'ANSI': 244, 'R': 128, 'G': 128, 'B': 128 })
     LIGHT_GRAY  = Color({ 'ANSI': 250, 'R': 188, 'G': 188, 'B': 188 })
@@ -36,7 +37,7 @@ class Colors:
     PURPLE      = Color({ 'ANSI':  93, 'R': 135, 'G':   0, 'B': 255 })
 
     COLORS = [ 
-        BLACK, WHITE, GRAY, LIGHT_GRAY, FOCUS_GOLD, FOCUS_BLUE,
+        BLACK, DEEP_BLACK, WHITE, GRAY, LIGHT_GRAY, FOCUS_GOLD, FOCUS_BLUE,
         RED, DARK_RED, ORANGE, YELLOW, DARK_YELLOW, GREEN,
         MID_GREEN, DARK_GREEN, SKY_BLUE, BLUE, MAGENTA, PURPLE,
     ]

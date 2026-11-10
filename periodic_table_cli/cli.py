@@ -241,7 +241,7 @@ def main():
 
     if not sys.stdout.isatty():
         print('\n Error: Interactive mode is only supported within a terminal screen.\n')
-        sys.exit()
+        sys.exit(1)
 
     data = load_data()
     app = App(AppConfig(atomic_number, symbol, name), data)
